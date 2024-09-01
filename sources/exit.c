@@ -6,12 +6,13 @@
 /*   By: dani <dani@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/01 08:50:21 by dani              #+#    #+#             */
-/*   Updated: 2024/09/01 11:43:41 by dani             ###   ########.fr       */
+/*   Updated: 2024/09/01 12:33:20 by dani             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/philo.h"
 
+//exit the function with an error message
 int	ph_error(char *str, t_philo *p)
 {
 	printf("%s\n", str);
@@ -19,6 +20,7 @@ int	ph_error(char *str, t_philo *p)
 	return (1);
 }
 
+//free all allocated memory in the structs
 int	free_memory(t_philo *p)
 {
 	int	i;

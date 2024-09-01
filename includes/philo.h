@@ -6,7 +6,7 @@
 /*   By: dani <dani@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/30 19:03:59 by dani              #+#    #+#             */
-/*   Updated: 2024/09/01 11:26:25 by dani             ###   ########.fr       */
+/*   Updated: 2024/09/01 12:42:05 by dani             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,11 +31,11 @@ typedef struct s_philosopher
 
 typedef struct s_philo
 {
-	unsigned long	number_of_philosophers;
+	int	            number_of_philosophers;
 	unsigned long	time_to_die;
 	unsigned long	time_to_eat;
 	unsigned long	time_to_sleep;
-	unsigned long	number_of_times_each_philosopher_must_eat;
+	int	            number_of_times_each_philosopher_must_eat;
 	unsigned long	init_time;
 	unsigned long	current_time;
 	t_phisolopher	*phi;
@@ -54,9 +54,10 @@ int		ph_error(char *str, t_philo *p);
 int		free_memory(t_philo *p);
 
 //parsing
-int		parsing(t_philo	*p, int argc, char **argv);
-void	initiate_struct_philo(t_philo	*p, int argc, char **argv);
-void	initiate_struct_phi(t_philo	*p);
+int	    parsing(t_philo	*p, char **argv);
+int	    initiate_struct_philo(t_philo	*p, int argc, char **argv);
+int	    initiate_struct_phi(t_philo	*p);
+int	    initiate_mutex(t_philo	*p);
 
 //philo
 void	philosophers(t_philo *p);
