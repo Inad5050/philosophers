@@ -6,48 +6,57 @@
 /*   By: dani <dani@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/30 19:03:59 by dani              #+#    #+#             */
-/*   Updated: 2024/08/30 22:40:53 by dani             ###   ########.fr       */
+/*   Updated: 2024/09/01 10:44:49 by dani             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef PHILO_H
 # define PHILO_H
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <unistd.h>
-#include <sys/time.h>
-#include <pthread.h>
+# include <stdio.h>
+# include <stdlib.h>
+# include <string.h>
+# include <unistd.h>
+# include <sys/time.h>
+# include <pthread.h>
+# include <stdbool.h>
 
 typedef struct s_philosopher
 {
-	int	hastakenfork;
-	int eating;
-	int sleeping;
-	int thinking;
-	int died;
-    
-}	t_phisolopher;
+	pthread_t		th;
+	unsigned long	last_meal;
+	unsigned long	previous_meal;
+	unsigned long	time_since_meal;
+}		t_phisolopher;
 
 typedef struct s_philo
 {
-	int 			number_of_philosophers;
-	int 			time_to_die;
-	int 			time_to_eat;
-	int 			time_to_sleep;
-	int 			number_of_times_each_philosopher_must_eat;
+	unsigned long	number_of_philosophers;
+	unsigned long	time_to_die;
+	unsigned long	time_to_eat;
+	unsigned long	time_to_sleep;
+	unsigned long	number_of_times_each_philosopher_must_eat;
+	unsigned long	init_time;
+	unsigned long	current_time;
 	t_phisolopher	*phi;
-    pthread_mutex_t mutex;    
-    
-}	t_philo;
-
-//main
-void	initiate_struct(t_philo	*p, int argc, char** argv);
-void	philosophers(t_philo *p);
+	int				i;
+	pthread_mutex_t	mutex;
+	bool			death;
+}		t_philo;
 
 //auxiliars
 void	*ft_calloc(size_t count, size_t size);
+
+//exit
+int		ph_error(char *str, t_philo *p);
+int		free_memory(t_philo *p);
+
+//parsing
+int		parsing(t_philo	*p, int argc, char **argv);
+void	initiate_struct(t_philo	*p, int argc, char **argv);
+
+//philo
+void	philosophers(t_philo *p);
 
 #endif
 
