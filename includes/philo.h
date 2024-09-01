@@ -6,7 +6,7 @@
 /*   By: dani <dani@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/30 19:03:59 by dani              #+#    #+#             */
-/*   Updated: 2024/09/01 10:44:49 by dani             ###   ########.fr       */
+/*   Updated: 2024/09/01 11:26:25 by dani             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,12 +40,14 @@ typedef struct s_philo
 	unsigned long	current_time;
 	t_phisolopher	*phi;
 	int				i;
-	pthread_mutex_t	mutex;
+	pthread_mutex_t	*mutex;
 	bool			death;
 }		t_philo;
 
 //auxiliars
+void	get_time(t_philo *p);
 void	*ft_calloc(size_t count, size_t size);
+int		ft_atoi(const char *str);
 
 //exit
 int		ph_error(char *str, t_philo *p);
@@ -53,10 +55,14 @@ int		free_memory(t_philo *p);
 
 //parsing
 int		parsing(t_philo	*p, int argc, char **argv);
-void	initiate_struct(t_philo	*p, int argc, char **argv);
+void	initiate_struct_philo(t_philo	*p, int argc, char **argv);
+void	initiate_struct_phi(t_philo	*p);
 
 //philo
 void	philosophers(t_philo *p);
+void*	routine(void *p_structure);
+void    philo_eat(t_philo *p, int i);
+void    philo_dead(t_philo *p, int i);
 
 #endif
 

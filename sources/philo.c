@@ -6,7 +6,7 @@
 /*   By: dani <dani@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/01 09:02:17 by dani              #+#    #+#             */
-/*   Updated: 2024/09/01 10:49:30 by dani             ###   ########.fr       */
+/*   Updated: 2024/09/01 11:26:53 by dani             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,13 +14,13 @@
 
 void	philosophers(t_philo *p)
 {
-    pthread_mutex_init(&(p->mutex), NULL);
+    p->i = 0;
     while (p->i < p->number_of_philosophers)
 	{
         if (pthread_create(&(p->phi[p->i].th), NULL, &routine, p) != 0) 
             return (ph_error("Failed to create thread", p), 0);
         p->i++;
-    }    
+    }
     p->i = 0;
 	while (p->i < p->number_of_philosophers)
 	{
@@ -28,7 +28,9 @@ void	philosophers(t_philo *p)
             return (ph_error("Failed to join thread", p), 0);
         p->i++;
     }
-    pthread_mutex_destroy(&(((t_philo*)p)->mutex));
+    while (p->i < p->number_of_philosophers)
+        pthread_mutex_destroy(&(((t_philo*)p)->mutex));
+    p->i = 0;
     return (1);
 }
 
@@ -41,24 +43,29 @@ void* routine(void *p_structure)
     i = p->i;
     while (1)
     {
-        pthread_mutex_lock(&((p)->mutex));
-        get_time(p);
-        p->phi[i].previous_meal = p->phi[i].last_meal;
-        p->phi[i].last_meal = p->current_time;
-        printf("philosopher[%i] has eaten\n", i);    
-        if (!philo_dead(p, i))
-            p->death = true;
+        philo_dead(p, i);
         if (p->death == true)
-        {
-            pthread_mutex_unlock(&((p)->mutex));
-            break ;
-        }            
+            break;
+        pthread_mutex_lock(&((p)->mutex));
+        printf("%lu %i has taken a fork\n", p->current_time , i);
+        get_time(p);
+        philo_eat(p, i);
+        usleep(p->time_to_eat);        
         pthread_mutex_unlock(&((p)->mutex));
+        printf("%lu %i is sleeping\n", p->current_time , i);
+        usleep(p->time_to_sleep);        
     }        
 	return (NULL);
 }
 
-int    philo_dead(t_philo *p, int i)
+void    philo_eat(t_philo *p, int i)
+{
+    p->phi[i].previous_meal = p->phi[i].last_meal;
+    p->phi[i].last_meal = p->current_time;
+    printf("%lu %i is eating\n", p->current_time , i);
+}
+
+void    philo_dead(t_philo *p, int i)
 {
     if (!(p->phi[i].time_since_meal))
         p->phi[i].time_since_meal = p->phi[i].last_meal - p->init_time;
@@ -66,8 +73,7 @@ int    philo_dead(t_philo *p, int i)
         p->phi[i].time_since_meal = p->phi[i].last_meal - p->phi[i].previous_meal;
     if (p->phi[i].time_since_meal >= p->time_to_die)
     {
-        printf("philosopher[%i] has died\n", i);
-        return (0);
+        printf("%lu %i died\n", p->current_time , i);
+        p->death = true;
     }
-    return (1);
 }
