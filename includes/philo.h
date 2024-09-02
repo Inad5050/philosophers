@@ -6,7 +6,7 @@
 /*   By: dani <dani@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/30 19:03:59 by dani              #+#    #+#             */
-/*   Updated: 2024/09/01 12:42:05 by dani             ###   ########.fr       */
+/*   Updated: 2024/09/02 20:40:36 by dani             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,33 +37,33 @@ typedef struct s_philo
 	unsigned long	time_to_sleep;
 	int	            number_of_times_each_philosopher_must_eat;
 	unsigned long	init_time;
-	unsigned long	current_time;
 	t_phisolopher	*phi;
 	int				i;
 	pthread_mutex_t	*mutex;
 	bool			death;
+    pthread_mutex_t death_mutex;
 }		t_philo;
 
 //auxiliars
-void	get_time(t_philo *p);
-void	*ft_calloc(size_t count, size_t size);
-int		ft_atoi(const char *str);
+unsigned long	get_time(t_philo *p);
+void        	*ft_calloc(size_t count, size_t size);
+int             ft_atoi(const char *str);
 
 //exit
-int		ph_error(char *str, t_philo *p);
-int		free_memory(t_philo *p);
+int             ph_error(char *str, t_philo *p);
+int             free_memory(t_philo *p);
 
 //parsing
-int	    parsing(t_philo	*p, char **argv);
-int	    initiate_struct_philo(t_philo	*p, int argc, char **argv);
-int	    initiate_struct_phi(t_philo	*p);
-int	    initiate_mutex(t_philo	*p);
+int             parsing(t_philo	*p, char **argv);
+int             initiate_struct_philo(t_philo	*p, int argc, char **argv);
+int             initiate_struct_phi(t_philo	*p);
+int             initiate_mutex(t_philo	*p);
 
 //philo
-void	philosophers(t_philo *p);
-void*	routine(void *p_structure);
-void    philo_eat(t_philo *p, int i);
-void    philo_dead(t_philo *p, int i);
+void	        philosophers(t_philo *p);
+void*	        routine(void *p_structure);
+int             philo_dead(t_philo *p, int i, unsigned long current_time);
+void            philo_eat(t_philo *p, int i, unsigned long current_time);
 
 #endif
 
