@@ -6,7 +6,7 @@
 /*   By: dani <dani@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/01 09:00:38 by dani              #+#    #+#             */
-/*   Updated: 2024/09/03 14:37:43 by dani             ###   ########.fr       */
+/*   Updated: 2024/09/03 16:58:17 by dani             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,8 @@ int	initiate_struct_phi(t_philo	*p)
 	while (i < p->number_of_philosophers)
 	{
 		p->phi[i].th = i;
+		p->phi[i].index = 1;
+		p->phi[i].philo = p;
 		i++;
 	}
 	return (1);

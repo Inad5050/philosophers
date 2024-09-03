@@ -6,7 +6,7 @@
 /*   By: dani <dani@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/30 19:03:59 by dani              #+#    #+#             */
-/*   Updated: 2024/09/03 14:49:07 by dani             ###   ########.fr       */
+/*   Updated: 2024/09/03 17:35:48 by dani             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,9 +25,10 @@ typedef struct s_philosopher
 {
 	pthread_t		th;
 	unsigned long	last_meal;
-/* 	unsigned long	previous_meal;
-	unsigned long	time_since_meal; */
     int             times_eaten;
+    int             index;
+    bool            max_meals;
+    t_philo         *philo;
 }		t_phisolopher;
 
 typedef struct s_philo
@@ -37,14 +38,16 @@ typedef struct s_philo
 	unsigned long	time_to_eat;
 	unsigned long	time_to_sleep;
     int             number_of_times_each_philosopher_must_eat;
+    unsigned long	initial_time;
 	t_phisolopher	*phi;
 	pthread_mutex_t	*mutex;
 	bool			death;
-    pthread_mutex_t death_mutex;
+    /* pthread_mutex_t death_mutex; */
 }		t_philo;
 
 //auxiliars
-unsigned long	get_time();
+unsigned long	get_time(p);
+void	        ph_print(char *str, int i, t_philo *p);
 void        	*ft_calloc(size_t count, size_t size);
 int             ft_atoi(const char *str);
 
@@ -63,6 +66,7 @@ void	        philosophers(t_philo *p);
 void*	        routine(void *p_structure);
 void            philo_dead(t_philo *p);
 void            philo_eat(t_phisolopher *p, int i, unsigned long current_time);
+int             max_meals(t_philo *p);
 
 #endif
 
