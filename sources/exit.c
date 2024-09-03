@@ -6,7 +6,7 @@
 /*   By: dani <dani@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/01 08:50:21 by dani              #+#    #+#             */
-/*   Updated: 2024/09/02 20:12:06 by dani             ###   ########.fr       */
+/*   Updated: 2024/09/03 14:44:50 by dani             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ int	ph_error(char *str, t_philo *p)
 	return (1);
 }
 
-//free all allocated memory in the structs
+//check allocated memory and free it
 int	free_memory(t_philo *p)
 {
 	int	i;

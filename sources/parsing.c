@@ -6,7 +6,7 @@
 /*   By: dani <dani@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/01 09:00:38 by dani              #+#    #+#             */
-/*   Updated: 2024/09/02 20:47:03 by dani             ###   ########.fr       */
+/*   Updated: 2024/09/03 14:37:43 by dani             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,15 +34,18 @@ int	parsing(t_philo	*p, char **argv)
 }
 
 //fill struct philo
-int	initiate_struct_philo(t_philo	*p, int argc, char **argv)
+int	initiate_struct_philo(t_philo *p, int argc, char **argv)
 {
 	p->number_of_philosophers = ft_atoi(argv[1]);
 	p->time_to_die = (unsigned long)ft_atoi(argv[2]);
 	p->time_to_eat = (unsigned long)ft_atoi(argv[3]);
 	p->time_to_sleep = (unsigned long)ft_atoi(argv[4]);
 	if (argc == 6)
-		p->number_of_philosophers = ft_atoi(argv[5]);
-	p->init_time = get_time(p);
+		p->number_of_times_each_philosopher_must_eat = ft_atoi(argv[5]);
+	if (p->number_of_philosophers < 1 || p->time_to_die < 0 || \
+	p->time_to_eat < 0 || p->time_to_sleep < 0 || (argc == 6 && \
+	p->number_of_times_each_philosopher_must_eat < 0))
+		return (ph_error("Incorrect args", p), 0);
 	if (!initiate_struct_phi(p))
 		return (0);
 	if (!initiate_mutex(p))
