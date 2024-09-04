@@ -6,22 +6,21 @@
 /*   By: dani <dani@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/01 08:50:21 by dani              #+#    #+#             */
-/*   Updated: 2024/09/03 14:44:50 by dani             ###   ########.fr       */
+/*   Updated: 2024/09/04 14:15:14 by dani             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/philo.h"
 
 //exit the function with an error message
-int	ph_error(char *str, t_philo *p)
+void	ph_error(char *str, t_philo *p)
 {
-	printf("%s\n", str);
+	ft_putstr_fd(str, 2);
 	free_memory(p);
-	return (1);
 }
 
 //check allocated memory and free it
-int	free_memory(t_philo *p)
+void	free_memory(t_philo *p)
 {
 	int	i;
 
@@ -36,5 +35,4 @@ int	free_memory(t_philo *p)
 	}
 	if (p)
 		free(p);
-	return (1);
 }

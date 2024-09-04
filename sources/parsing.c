@@ -6,14 +6,30 @@
 /*   By: dani <dani@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/01 09:00:38 by dani              #+#    #+#             */
-/*   Updated: 2024/09/03 16:58:17 by dani             ###   ########.fr       */
+/*   Updated: 2024/09/04 14:27:31 by dani             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/philo.h"
 
 //check if args are positive numbers
-int	parsing(t_philo	*p, char **argv)
+int	parsing(t_philo	*p, int argc, char **argv)
+{
+	if (!check_args(p, argv))
+		return (0);
+	if (!initiate_args(p, argc, argv))
+		return (0);
+	p->initial_time = get_time(p);
+	if (!initiate_struct_phi(p))
+		return (0);
+	if (!initiate_mutex(p))
+		return (0);
+	if (pthread_mutex_init(&(p->write_mutex), NULL))
+		return (ph_error("Cannot initiate write_mutex\n", p), 0);
+	return (1);	
+}
+
+int	check_args(t_philo	*p, char **argv)
 {
 	int	i;
 	int	x;
@@ -34,7 +50,7 @@ int	parsing(t_philo	*p, char **argv)
 }
 
 //fill struct philo
-int	initiate_struct_philo(t_philo *p, int argc, char **argv)
+int	initiate_args(t_philo *p, int argc, char **argv)
 {
 	p->number_of_philosophers = ft_atoi(argv[1]);
 	p->time_to_die = (unsigned long)ft_atoi(argv[2]);
@@ -45,14 +61,8 @@ int	initiate_struct_philo(t_philo *p, int argc, char **argv)
 	if (p->number_of_philosophers < 1 || p->time_to_die < 0 || \
 	p->time_to_eat < 0 || p->time_to_sleep < 0 || (argc == 6 && \
 	p->number_of_times_each_philosopher_must_eat < 0))
-		return (ph_error("Incorrect args", p), 0);
-	if (!initiate_struct_phi(p))
-		return (0);
-	if (!initiate_mutex(p))
-		return (0);
-	if (pthread_mutex_init(&(p->death_mutex), NULL))
-		pthread_mutex_destroy(&(p->death_mutex));
-	return (1);
+		return (ph_error("Incorrect args values", p), 0);
+	return (1);	
 }
 
 //fill struct phi
@@ -66,15 +76,16 @@ int	initiate_struct_phi(t_philo	*p)
 		return (ph_error("Cannot allocate memory for t_phisolopher\n", p), 0);
 	while (i < p->number_of_philosophers)
 	{
+		p->phi[i].index = i;
 		p->phi[i].th = i;
-		p->phi[i].index = 1;
+		p->phi[i].last_meal = p->initial_time;
 		p->phi[i].philo = p;
 		i++;
 	}
 	return (1);
 }
 
-//start the mutexs
+//start mutexs
 int	initiate_mutex(t_philo	*p)
 {
 	int	i;

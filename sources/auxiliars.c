@@ -6,35 +6,28 @@
 /*   By: dani <dani@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/30 19:05:45 by dani              #+#    #+#             */
-/*   Updated: 2024/09/03 17:13:11 by dani             ###   ########.fr       */
+/*   Updated: 2024/09/04 14:31:47 by dani             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/philo.h"
 
-//get p->current_time in microseconds
 unsigned long	get_time(t_philo *p)
 {
-	struct 			timeval	*tv;
+	struct 			timeval	tv;
 	unsigned long	current_time;
 	
-	tv = ft_calloc(1, sizeof(struct timeval));
-	if (gettimeofday(tv, NULL))
-	{
-		free(tv);
+	if (gettimeofday(&tv, NULL))
 		return (ph_error("Couldn't get_time", p), 0);
-	}
-	current_time = tv->tv_usec;
-	return (free(tv), current_time);
+	current_time = tv.tv_usec - p->initial_time;
+	return (current_time);
 }
 
-//NECESITA MUTEX?
 void	ph_print(char *str, int i, t_philo *p)
 {
-	unsigned long	current_time;
-	
-	current_time = get_time(p);
-	printf("%lu %i %s\n", current_time - p->initial_time, i, str);
+	pthread_mutex_lock(&(p->write_mutex));
+	printf("%lu %i %s\n", get_time(p) - p->initial_time, i, str);
+	pthread_mutex_unlock(&(p->write_mutex));
 }
 
 void	*ft_calloc(size_t count, size_t size)
@@ -73,4 +66,16 @@ int	ft_atoi(const char *str)
 		str++;
 	}
 	return (b * a);
+}
+
+void	ft_putstr_fd(char *s, int fd)
+{
+	if (s == NULL)
+		return ;
+	while (*s)
+	{
+		write(fd, s, 1);
+		s++;
+	}
+	write(fd, "\n", 1);
 }

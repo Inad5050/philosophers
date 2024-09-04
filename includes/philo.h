@@ -6,7 +6,7 @@
 /*   By: dani <dani@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/30 19:03:59 by dani              #+#    #+#             */
-/*   Updated: 2024/09/03 17:35:48 by dani             ###   ########.fr       */
+/*   Updated: 2024/09/04 14:35:13 by dani             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,11 +23,10 @@
 
 typedef struct s_philosopher
 {
-	pthread_t		th;
+	int             index;
+    pthread_t		th;
 	unsigned long	last_meal;
     int             times_eaten;
-    int             index;
-    bool            max_meals;
     t_philo         *philo;
 }		t_phisolopher;
 
@@ -41,32 +40,39 @@ typedef struct s_philo
     unsigned long	initial_time;
 	t_phisolopher	*phi;
 	pthread_mutex_t	*mutex;
-	bool			death;
-    /* pthread_mutex_t death_mutex; */
+    pthread_mutex_t write_mutex;
+    bool			death;
+    bool            max_meals;
 }		t_philo;
 
 //auxiliars
-unsigned long	get_time(p);
+unsigned long	get_time(t_philo *p);
 void	        ph_print(char *str, int i, t_philo *p);
 void        	*ft_calloc(size_t count, size_t size);
 int             ft_atoi(const char *str);
+void	        ft_putstr_fd(char *s, int fd);
 
 //exit
-int             ph_error(char *str, t_philo *p);
-int             free_memory(t_philo *p);
+void            ph_error(char *str, t_philo *p);
+void            free_memory(t_philo *p);
 
 //parsing
-int             parsing(t_philo	*p, char **argv);
-int             initiate_struct_philo(t_philo	*p, int argc, char **argv);
+int	            parsing(t_philo	*p, int argc, char **argv);
+int	            check_args(t_philo	*p, char **argv);
+int	            initiate_args(t_philo *p, int argc, char **argv);
 int             initiate_struct_phi(t_philo	*p);
 int             initiate_mutex(t_philo	*p);
 
 //philo
-void	        philosophers(t_philo *p);
+void	        threads(t_philo *p);
 void*	        routine(void *p_structure);
-void            philo_dead(t_philo *p);
 void            philo_eat(t_phisolopher *p, int i, unsigned long current_time);
-int             max_meals(t_philo *p);
+
+//stop
+void            stop_condition(t_philo *p);
+void            check_death(t_philo *p);
+void            check_max_meals(t_philo *p);
+void            stop_threads(t_philo *p)
 
 #endif
 
