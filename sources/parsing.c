@@ -6,7 +6,7 @@
 /*   By: dani <dani@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/01 09:00:38 by dani              #+#    #+#             */
-/*   Updated: 2024/09/04 18:16:17 by dani             ###   ########.fr       */
+/*   Updated: 2024/09/04 20:43:57 by dani             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@ int	parsing(t_philo	*p, int argc, char **argv)
 	if (!initiate_args(p, argc, argv))
 		return (0);
 	p->initial_time = get_time(p);
+	p->initial_time = get_time(p);
 	if (!initiate_struct_phi(p))
 		return (0);
 	if (!initiate_mutex(p))
@@ -28,7 +29,7 @@ int	parsing(t_philo	*p, int argc, char **argv)
 		return (ph_error("Cannot initiate write_mutex\n", p), 0);
 /* 	if (pthread_mutex_init(&(p->meal_mutex), NULL))
 		return (ph_error("Cannot initiate meal_mutex\n", p), 0); */
-	return (1);	
+	return (1);
 }
 
 int	check_args(t_philo	*p, char **argv)
@@ -55,16 +56,16 @@ int	check_args(t_philo	*p, char **argv)
 int	initiate_args(t_philo *p, int argc, char **argv)
 {
 	p->number_of_philosophers = ft_atoi(argv[1]);
-	p->time_to_die = (unsigned long)ft_atoi(argv[2]);
-	p->time_to_eat = (unsigned long)ft_atoi(argv[3]);
-	p->time_to_sleep = (unsigned long)ft_atoi(argv[4]);
+	p->time_to_die = (long)ft_atoi(argv[2]);
+	p->time_to_eat = (long)ft_atoi(argv[3]);
+	p->time_to_sleep = (long)ft_atoi(argv[4]);
 	if (argc == 6)
 		p->number_of_times_each_philosopher_must_eat = ft_atoi(argv[5]);
 	if (p->number_of_philosophers < 1 || p->time_to_die < 0 || \
 	p->time_to_eat < 0 || p->time_to_sleep < 0 || (argc == 6 && \
 	p->number_of_times_each_philosopher_must_eat < 0))
 		return (ph_error("Incorrect args values", p), 0);
-	return (1);	
+	return (1);
 }
 
 //fill struct phi
@@ -93,16 +94,17 @@ int	initiate_mutex(t_philo	*p)
 	int	i;
 	int	x;
 
-	i = 0;	
-	x = 0;	
-	p->mutex = ft_calloc(p->number_of_philosophers + 1, sizeof(pthread_mutex_t));
+	i = 0;
+	x = 0;
+	p->mutex = ft_calloc(p->number_of_philosophers + 1, \
+	sizeof(pthread_mutex_t));
 	if (!p->mutex)
-		ph_error("Cannot allocate memory for p->mutex\n", p);	
+		ph_error("Cannot allocate memory for p->mutex\n", p);
 	while (i < p->number_of_philosophers)
 	{
 		if (pthread_mutex_init(&(p->mutex[i]), NULL))
-		{			
-			while(x < i)
+		{
+			while (x < i)
 				pthread_mutex_destroy(&(p->mutex[x]));
 			free(p->mutex);
 			return (ph_error("Failed to initiate mutex\n", p), 0);

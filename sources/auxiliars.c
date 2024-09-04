@@ -5,18 +5,18 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: dani <dani@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/01 08:50:21 by dani              #+#    #+#             */
-/*   Updated: 2024/09/04 18:33:03 by dani             ###   ########.fr       */
+/*   Created: 2024/09/04 18:36:42 by dani              #+#    #+#             */
+/*   Updated: 2024/09/04 20:55:44 by dani             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/philo.h"
 
-unsigned long	get_time(t_philo *p)
+long	get_time(t_philo *p)
 {
-	struct 			timeval	tv;
-	unsigned long	current_time;
-	
+	struct timeval	tv;
+	long			current_time;
+
 	if (gettimeofday(&tv, NULL))
 		return (ph_error("Couldn't get_time", p), 0);
 	current_time = tv.tv_usec - p->initial_time;
