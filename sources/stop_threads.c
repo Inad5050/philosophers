@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   stop.c                                             :+:      :+:    :+:   */
+/*   stop_threads.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: dani <dani@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 14:11:29 by dani              #+#    #+#             */
-/*   Updated: 2024/09/04 14:19:35 by dani             ###   ########.fr       */
+/*   Updated: 2024/09/04 18:16:02 by dani             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,10 +17,10 @@ void    stop_condition(t_philo *p)
 {
     while(p->death == false && p->max_meals == false)
     {
-        pthread_mutex_lock(&(p->death_mutex));
+        /* pthread_mutex_lock(&(p->meal_mutex)); */
         check_death(p);
         check_max_meals(p);
-        pthread_mutex_unlock(&(p->death_mutex));
+        /* pthread_mutex_unlock(&(p->meal_mutex)); */
     }
 }
 
@@ -35,7 +35,7 @@ void    check_death(t_philo *p)
         if (p->phi[i].last_meal - get_time(p) >= p->time_to_die)
         {
             p->death = true;
-            ph_print("Has died", i, p);
+            ph_print("died", i, p);
         }
         i++;
     }   

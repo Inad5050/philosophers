@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   philo.c                                            :+:      :+:    :+:   */
+/*   threads.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: dani <dani@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/01 09:02:17 by dani              #+#    #+#             */
-/*   Updated: 2024/09/04 14:20:33 by dani             ###   ########.fr       */
+/*   Updated: 2024/09/04 18:15:50 by dani             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,36 +35,48 @@ void* routine(void *philosopher_struct)
 {
     t_phisolopher   *phi;
     t_philo         *p;
-    int             i;
-    unsigned long	current_time;
 
     phi = (t_phisolopher*)philosopher_struct;
     p = phi->philo;    
-    while (1)
+    while (p->death == false && p->max_meals == false)
     {
-        current_time = get_time(p);
-        pthread_mutex_lock(&((p)->mutex[i]));
-        if (i != p->number_of_philosophers)
-            pthread_mutex_lock(&((p)->mutex[i + 1]));
-        else
-            pthread_mutex_lock(&((p)->mutex[0]));
-        ph_print("has taken a fork", i, p);
-        philo_eat(phi, i, current_time);
-        usleep(p->time_to_eat);        
-        pthread_mutex_unlock(&((p)->mutex[i]));
-        if (i != p->number_of_philosophers)
-            pthread_mutex_unlock(&((p)->mutex[i + 1]));
-        else
-            pthread_mutex_unlock(&((p)->mutex[0]));
-        ph_print("is sleeping", i, p);
-        usleep(p->time_to_sleep);        
-    }        
+        use_mutex(phi, LOCK);
+        /* pthread_mutex_lock(&(p->meal_mutex)); */
+        phi->last_meal = get_time(phi->philo);
+        phi->times_eaten++;
+        ph_print("is eating", phi->index, phi->philo);
+        usleep(p->time_to_eat);
+        /* pthread_mutex_unlock(&(p->meal_mutex)); */
+        use_mutex(phi, UNLOCK);
+        ph_print("is sleeping", phi->index, p);
+        usleep(p->time_to_sleep);
+        ph_print("is thinking", phi->index, p);   
+    }
+    return (NULL);
 }
 
-//make philosphers eat
-void    philo_eat(t_phisolopher *phi, int i, unsigned long current_time)
+//philosophers take the forks
+void    use_mutex(t_phisolopher *phi, int i)
 {
-    phi->last_meal = get_time(phi->philo);
-    phi->times_eaten++;
-    ph_print("is eating", i, phi->philo);
+    t_philo *p;
+
+    p = phi->philo;
+    if (i == LOCK)
+    {
+        pthread_mutex_lock(&(p->mutex[phi->index]));
+        ph_print("has taken a fork", phi->index, p);
+        if (phi->index != p->number_of_philosophers - 1)
+            pthread_mutex_lock(&(p->mutex[phi->index + 1]));
+        else
+            pthread_mutex_lock(&(p->mutex[0]));
+        ph_print("has taken a fork", phi->index, p);       
+    }
+    if (i == UNLOCK)
+    {
+        pthread_mutex_unlock(&(p->mutex[phi->index]));
+        if (phi->index != p->number_of_philosophers)
+            pthread_mutex_unlock(&(p->mutex[phi->index + 1]));
+        else
+            pthread_mutex_unlock(&(p->mutex[0]));
+    }    
 }

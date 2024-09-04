@@ -6,7 +6,7 @@
 /*   By: dani <dani@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/01 09:00:38 by dani              #+#    #+#             */
-/*   Updated: 2024/09/04 14:27:31 by dani             ###   ########.fr       */
+/*   Updated: 2024/09/04 18:16:17 by dani             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,8 @@ int	parsing(t_philo	*p, int argc, char **argv)
 		return (0);
 	if (pthread_mutex_init(&(p->write_mutex), NULL))
 		return (ph_error("Cannot initiate write_mutex\n", p), 0);
+/* 	if (pthread_mutex_init(&(p->meal_mutex), NULL))
+		return (ph_error("Cannot initiate meal_mutex\n", p), 0); */
 	return (1);	
 }
 

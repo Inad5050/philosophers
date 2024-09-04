@@ -6,7 +6,7 @@
 /*   By: dani <dani@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/30 19:03:59 by dani              #+#    #+#             */
-/*   Updated: 2024/09/04 14:35:13 by dani             ###   ########.fr       */
+/*   Updated: 2024/09/04 18:29:23 by dani             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,11 @@
 # include <pthread.h>
 # include <stdbool.h>
 
+# define LOCK   1
+# define UNLOCK 0
+
+typedef struct s_philo t_philo;
+
 typedef struct s_philosopher
 {
 	int             index;
@@ -30,7 +35,7 @@ typedef struct s_philosopher
     t_philo         *philo;
 }		t_phisolopher;
 
-typedef struct s_philo
+struct s_philo
 {
 	int	            number_of_philosophers;
 	unsigned long	time_to_die;
@@ -41,15 +46,16 @@ typedef struct s_philo
 	t_phisolopher	*phi;
 	pthread_mutex_t	*mutex;
     pthread_mutex_t write_mutex;
+    /* pthread_mutex_t meal_mutex; */
     bool			death;
     bool            max_meals;
-}		t_philo;
+};
 
 //auxiliars
 unsigned long	get_time(t_philo *p);
 void	        ph_print(char *str, int i, t_philo *p);
-void        	*ft_calloc(size_t count, size_t size);
-int             ft_atoi(const char *str);
+void	        *ft_calloc(size_t count, size_t size);
+int	            ft_atoi(const char *str);
 void	        ft_putstr_fd(char *s, int fd);
 
 //exit
@@ -64,11 +70,11 @@ int             initiate_struct_phi(t_philo	*p);
 int             initiate_mutex(t_philo	*p);
 
 //philo
-void	        threads(t_philo *p);
-void*	        routine(void *p_structure);
-void            philo_eat(t_phisolopher *p, int i, unsigned long current_time);
+void	        start_threads(t_philo *p);
+void*           routine(void *philosopher_struct);
+void            use_mutex(t_phisolopher *phi, int i);
 
-//stop
+//stop_threads
 void            stop_condition(t_philo *p);
 void            check_death(t_philo *p);
 void            check_max_meals(t_philo *p);
