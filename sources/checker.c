@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   stop.c                                             :+:      :+:    :+:   */
+/*   checker.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: dani <dani@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 14:11:29 by dani              #+#    #+#             */
-/*   Updated: 2024/09/05 04:20:55 by dani             ###   ########.fr       */
+/*   Updated: 2024/09/05 20:30:50 by dani             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,11 @@ void	*checker(void *philosopher_struct)
 
 	phi = (t_phisolopher *)philosopher_struct;
 	p = phi->philo;
+
+	printf("cheecker STARTED philosopher_struct = %p\n", philosopher_struct);
+	printf("cheecker STARTED phi = %p\n", phi);
+	printf("cheecker STARTED for phi->index = %i death = %i\n", phi->index, p->death);
+	
 	while (p->death == false && p->max_meals == false)
 	{
 		pthread_mutex_lock(&(phi->checker_mutex));
@@ -27,6 +32,9 @@ void	*checker(void *philosopher_struct)
 		check_max_meals(p);
 		pthread_mutex_unlock(&(phi->checker_mutex));
 	}
+	
+	printf("cheecker ENDED for thread %i death = %i\n", phi->index, p->death);
+	
 	return(NULL);
 }
 
@@ -36,11 +44,10 @@ void	check_death(t_phisolopher *phi)
 	t_philo			*p;
 
 	p = phi->philo;
-	if (phi->last_meal - get_time(p) >= p->time_to_die)
+	if (get_time(p) - phi->last_meal >= p->time_to_die)
 	{
 		pthread_mutex_lock(&(p->write_mutex));
-		p->death = true;
-		printf("%lu %i died\n", get_time(p), phi->index);
+		p->death = true;		
 		pthread_mutex_unlock(&(p->write_mutex));
 	}
 }

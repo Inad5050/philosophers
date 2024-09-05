@@ -6,7 +6,7 @@
 #    By: dani <dani@student.42.fr>                  +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/08/30 19:01:54 by dani              #+#    #+#              #
-#    Updated: 2024/09/04 20:47:03 by dani             ###   ########.fr        #
+#    Updated: 2024/09/05 19:37:56 by dani             ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,7 +21,7 @@ COLOR_RESET = \033[0m
 
 #sources
 SRC_DIR = sources/
-SRC_FILES =  auxiliars.c exit.c main.c parsing.c stop.c threads.c
+SRC_FILES =  auxiliars.c checker.c exit.c main.c parsing.c threads.c
 SRC = $(addprefix $(SRC_DIR), $(SRC_FILES))
 OBJ = $(SRC:.c=.o)
 

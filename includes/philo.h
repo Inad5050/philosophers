@@ -6,7 +6,7 @@
 /*   By: dani <dani@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/30 19:03:59 by dani              #+#    #+#             */
-/*   Updated: 2024/09/05 04:21:24 by dani             ###   ########.fr       */
+/*   Updated: 2024/09/05 20:07:46 by dani             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,12 +54,19 @@ struct s_philo
 	bool			max_meals;
 };
 
+void	print_everything(t_philo *p);
+
 //auxiliars
 long	get_time(t_philo *p);
 void	ph_print(char *str, int i, t_philo *p);
 void	*ft_calloc(size_t count, size_t size);
 int		ft_atoi(const char *str);
 void	ft_putstr_fd(char *s, int fd);
+
+//checker
+void	*checker(void *philosopher_struct);
+void	check_death(t_phisolopher *phi);
+void	check_max_meals(t_philo *p);
 
 //exit
 void	ph_error(char *str, t_philo *p);
@@ -77,10 +84,5 @@ void	start_threads(t_philo *p);
 void	*routine(void *philosopher_struct);
 void	forks(t_phisolopher *phi, int i);
 int		philo_eat(t_phisolopher *phi);
-
-//stop
-void	*checker(void *philosopher_struct);
-void	check_death(t_phisolopher *phi);
-void	check_max_meals(t_philo *p);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: dani <dani@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/01 09:02:17 by dani              #+#    #+#             */
-/*   Updated: 2024/09/05 04:19:39 by dani             ###   ########.fr       */
+/*   Updated: 2024/09/05 20:45:33 by dani             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,21 +20,26 @@ void	start_threads(t_philo *p)
 	i = 0;
 	while (i < p->number_of_philosophers)
 	{
+		printf("pre START THREAD p->phi[%i] = %p\n", i, &(p->phi[i]));
+		
 		if (pthread_create(&(p->phi[i].th), NULL, &routine, &(p->phi[i])))
-			ph_error("Failed to create thread", p);
-		usleep(1);
+			ph_error("Failed to create thread", p);		
+		usleep(100);
+		
+		printf("post START THREAD p->phi[%i] = %p\n", i, &(p->phi[i]));
+		
 		i++;
 	}
 	i = 0;
 	while (i < p->number_of_philosophers)
 	{	
 
-		printf("preJOINED %i\n", p->phi[i].index);
+/* 		printf("preJOINED %i\n", p->phi[i].index); */
 		
 		if (pthread_join(p->phi[i].th, NULL))
 			ph_error("Failed to join thread", p);
 		
-		printf("JOINED %i\n", p->phi[i].index);
+/* 		printf("JOINED %i\n", p->phi[i].index); */
 		
 		i++;
 	}
@@ -48,7 +53,7 @@ void	*routine(void *philosopher_struct)
 
 	phi = (t_phisolopher *)philosopher_struct;
 	p = phi->philo;
-	if (pthread_create(&(phi->th_checker), NULL, &checker, &(p->phi)))
+	if (pthread_create(&(phi->th_checker), NULL, &checker, phi))
 		ph_error("Failed to create thread", p);
 	while (p->death == false && p->max_meals == false)
 	{
@@ -65,6 +70,9 @@ void	*routine(void *philosopher_struct)
 	}
 	if (pthread_join(phi->th_checker, NULL))
 		ph_error("Failed to join thread", p);
+	
+/* 	printf("thread ended index = %i\n", phi->index); */
+	
 	return (NULL);
 }
 
