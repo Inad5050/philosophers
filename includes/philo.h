@@ -6,7 +6,7 @@
 /*   By: dani <dani@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/30 19:03:59 by dani              #+#    #+#             */
-/*   Updated: 2024/09/05 03:17:05 by dani             ###   ########.fr       */
+/*   Updated: 2024/09/05 04:21:24 by dani             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,9 @@ typedef struct s_philosopher
 	pthread_t		th;
 	long			last_meal;
 	int				times_eaten;
+	pthread_t		th_checker;
+	bool			checker_mutex_initialized;
+	pthread_mutex_t	checker_mutex;
 	t_philo			*philo;
 }		t_phisolopher;
 
@@ -45,8 +48,6 @@ struct s_philo
 	long			initial_time;
 	t_phisolopher	*phi;
 	pthread_mutex_t	*mutex;
-	bool			death_mutex_initialized;
-	pthread_mutex_t death_mutex;
 	bool			write_mutex_initialized;
 	pthread_mutex_t	write_mutex;
 	bool			death;
@@ -78,9 +79,8 @@ void	forks(t_phisolopher *phi, int i);
 int		philo_eat(t_phisolopher *phi);
 
 //stop
-void	stop_condition(t_philo *p);
-void	check_death(t_philo *p);
+void	*checker(void *philosopher_struct);
+void	check_death(t_phisolopher *phi);
 void	check_max_meals(t_philo *p);
-void	stop_threads(t_philo *p);
 
 #endif

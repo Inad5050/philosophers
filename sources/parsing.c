@@ -6,7 +6,7 @@
 /*   By: dani <dani@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/01 09:00:38 by dani              #+#    #+#             */
-/*   Updated: 2024/09/05 03:19:06 by dani             ###   ########.fr       */
+/*   Updated: 2024/09/05 03:58:28 by dani             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,9 +24,6 @@ int	parsing(t_philo	*p, int argc, char **argv)
 		return (0);
 	if (!initiate_mutex(p))
 		return (0);
-	if (pthread_mutex_init(&(p->death_mutex), NULL))
-		return (ph_error("Cannot initiate meal_mutex\n", p), 0);
-	p->death_mutex_initialized = true;
 	if (pthread_mutex_init(&(p->write_mutex), NULL))
 		return (ph_error("Cannot initiate write_mutex\n", p), 0);
 	p->write_mutex_initialized = true;
@@ -81,9 +78,11 @@ int	initiate_struct_phi(t_philo	*p)
 	while (i < p->number_of_philosophers)
 	{
 		p->phi[i].index = i;
-		p->phi[i].th = i;
 		p->phi[i].last_meal = p->initial_time;
 		p->phi[i].philo = p;
+		if (pthread_mutex_init(&(p->phi[i].checker_mutex), NULL))
+			return (ph_error("Cannot initiate meal_mutex\n", p), 0);
+		p->phi[i].checker_mutex_initialized = true;
 		i++;
 	}
 	return (1);
