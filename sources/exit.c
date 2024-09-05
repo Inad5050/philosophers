@@ -6,7 +6,7 @@
 /*   By: dani <dani@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/01 08:50:21 by dani              #+#    #+#             */
-/*   Updated: 2024/09/05 04:01:55 by dani             ###   ########.fr       */
+/*   Updated: 2024/09/06 01:39:08 by dani             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,11 +32,11 @@ void	free_memory(t_philo *p)
 		free(p->phi);
 	}
 	i = 0;
-	if (p->mutex)
+	if (p->forks)
 	{
 		while (i < p->number_of_philosophers)
-			pthread_mutex_destroy(&(p->mutex[i++]));
-		free(p->mutex);
+			pthread_mutex_destroy(&(p->forks[i++]));
+		free(p->forks);
 	}
 	if (p->write_mutex_initialized)
 		pthread_mutex_destroy(&(p->write_mutex));

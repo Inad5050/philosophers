@@ -6,7 +6,7 @@
 /*   By: dani <dani@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 14:11:29 by dani              #+#    #+#             */
-/*   Updated: 2024/09/05 20:30:50 by dani             ###   ########.fr       */
+/*   Updated: 2024/09/06 01:34:20 by dani             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,11 +20,6 @@ void	*checker(void *philosopher_struct)
 
 	phi = (t_phisolopher *)philosopher_struct;
 	p = phi->philo;
-
-	printf("cheecker STARTED philosopher_struct = %p\n", philosopher_struct);
-	printf("cheecker STARTED phi = %p\n", phi);
-	printf("cheecker STARTED for phi->index = %i death = %i\n", phi->index, p->death);
-	
 	while (p->death == false && p->max_meals == false)
 	{
 		pthread_mutex_lock(&(phi->checker_mutex));
@@ -33,7 +28,7 @@ void	*checker(void *philosopher_struct)
 		pthread_mutex_unlock(&(phi->checker_mutex));
 	}
 	
-	printf("cheecker ENDED for thread %i death = %i\n", phi->index, p->death);
+	printf("CHECKER ended index %i\n", phi->index);
 	
 	return(NULL);
 }
@@ -46,8 +41,11 @@ void	check_death(t_phisolopher *phi)
 	p = phi->philo;
 	if (get_time(p) - phi->last_meal >= p->time_to_die)
 	{
+		pthread_mutex_lock(&(phi->checker_mutex));
+		p->death = true;
+		pthread_mutex_unlock(&(phi->checker_mutex));
 		pthread_mutex_lock(&(p->write_mutex));
-		p->death = true;		
+		printf("%lu %i %s\n", get_time(p), phi->index, "has died");
 		pthread_mutex_unlock(&(p->write_mutex));
 	}
 }
@@ -65,8 +63,7 @@ void	check_max_meals(t_philo	*p)
 	{
 		p->max_meals = true;
 		pthread_mutex_lock(&(p->write_mutex));
-		printf("%lu %s\n", get_time(p) - p->initial_time, \
-		"All philosophers are full");
+		printf("%lu %s\n", get_time(p),	"all philosophers are full");
 		pthread_mutex_unlock(&(p->write_mutex));
 	}
 }

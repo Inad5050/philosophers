@@ -6,7 +6,7 @@
 /*   By: dani <dani@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/01 09:00:38 by dani              #+#    #+#             */
-/*   Updated: 2024/09/05 03:58:28 by dani             ###   ########.fr       */
+/*   Updated: 2024/09/06 01:39:47 by dani             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ int	parsing(t_philo	*p, int argc, char **argv)
 	p->initial_time = get_time(p);	
 	if (!initiate_struct_phi(p))
 		return (0);
-	if (!initiate_mutex(p))
+	if (!initiate_forks(p))
 		return (0);
 	if (pthread_mutex_init(&(p->write_mutex), NULL))
 		return (ph_error("Cannot initiate write_mutex\n", p), 0);
@@ -89,25 +89,25 @@ int	initiate_struct_phi(t_philo	*p)
 }
 
 //start mutexs
-int	initiate_mutex(t_philo	*p)
+int	initiate_forks(t_philo	*p)
 {
 	int	i;
 	int	x;
 
 	i = 0;
 	x = 0;
-	p->mutex = ft_calloc(p->number_of_philosophers + 1, \
+	p->forks = ft_calloc(p->number_of_philosophers + 1, \
 	sizeof(pthread_mutex_t));
-	if (!p->mutex)
-		ph_error("Cannot allocate memory for p->mutex\n", p);
+	if (!p->forks)
+		ph_error("Cannot allocate memory for p->forks\n", p);
 	while (i < p->number_of_philosophers)
 	{
-		if (pthread_mutex_init(&(p->mutex[i]), NULL))
+		if (pthread_mutex_init(&(p->forks[i]), NULL))
 		{
 			while (x < i)
-				pthread_mutex_destroy(&(p->mutex[x]));
-			free(p->mutex);
-			return (ph_error("Failed to initiate mutex\n", p), 0);
+				pthread_mutex_destroy(&(p->forks[x]));
+			free(p->forks);
+			return (ph_error("Failed to initiate forks\n", p), 0);
 		}
 		i++;
 	}

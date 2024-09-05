@@ -6,7 +6,7 @@
 /*   By: dani <dani@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/30 19:03:59 by dani              #+#    #+#             */
-/*   Updated: 2024/09/05 20:07:46 by dani             ###   ########.fr       */
+/*   Updated: 2024/09/06 01:39:57 by dani             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,8 +33,8 @@ typedef struct s_philosopher
 	long			last_meal;
 	int				times_eaten;
 	pthread_t		th_checker;
-	bool			checker_mutex_initialized;
 	pthread_mutex_t	checker_mutex;
+	bool			checker_mutex_initialized;
 	t_philo			*philo;
 }		t_phisolopher;
 
@@ -47,9 +47,9 @@ struct s_philo
 	int				number_of_times_each_philosopher_must_eat;
 	long			initial_time;
 	t_phisolopher	*phi;
-	pthread_mutex_t	*mutex;
-	bool			write_mutex_initialized;
+	pthread_mutex_t	*forks;
 	pthread_mutex_t	write_mutex;
+	bool			write_mutex_initialized;
 	bool			death;
 	bool			max_meals;
 };
@@ -77,12 +77,12 @@ int		parsing(t_philo	*p, int argc, char **argv);
 int		check_args(t_philo	*p, char **argv);
 int		initiate_args(t_philo *p, int argc, char **argv);
 int		initiate_struct_phi(t_philo	*p);
-int		initiate_mutex(t_philo	*p);
+int		initiate_forks(t_philo	*p);
 
 //philo
 void	start_threads(t_philo *p);
 void	*routine(void *philosopher_struct);
 void	forks(t_phisolopher *phi, int i);
-int		philo_eat(t_phisolopher *phi);
+void	philo_eat(t_phisolopher *phi);
 
 #endif
