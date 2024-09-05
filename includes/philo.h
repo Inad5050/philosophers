@@ -6,7 +6,7 @@
 /*   By: dani <dani@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/30 19:03:59 by dani              #+#    #+#             */
-/*   Updated: 2024/09/04 20:46:57 by dani             ###   ########.fr       */
+/*   Updated: 2024/09/05 03:17:05 by dani             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,8 +45,10 @@ struct s_philo
 	long			initial_time;
 	t_phisolopher	*phi;
 	pthread_mutex_t	*mutex;
+	bool			death_mutex_initialized;
+	pthread_mutex_t death_mutex;
+	bool			write_mutex_initialized;
 	pthread_mutex_t	write_mutex;
-	/* pthread_mutex_t meal_mutex; */
 	bool			death;
 	bool			max_meals;
 };
@@ -72,7 +74,8 @@ int		initiate_mutex(t_philo	*p);
 //philo
 void	start_threads(t_philo *p);
 void	*routine(void *philosopher_struct);
-void	use_mutex(t_phisolopher *phi, int i);
+void	forks(t_phisolopher *phi, int i);
+int		philo_eat(t_phisolopher *phi);
 
 //stop
 void	stop_condition(t_philo *p);

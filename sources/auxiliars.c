@@ -6,7 +6,7 @@
 /*   By: dani <dani@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 18:36:42 by dani              #+#    #+#             */
-/*   Updated: 2024/09/04 20:55:44 by dani             ###   ########.fr       */
+/*   Updated: 2024/09/05 02:26:43 by dani             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,18 +15,17 @@
 long	get_time(t_philo *p)
 {
 	struct timeval	tv;
-	long			current_time;
 
 	if (gettimeofday(&tv, NULL))
 		return (ph_error("Couldn't get_time", p), 0);
-	current_time = tv.tv_usec - p->initial_time;
-	return (current_time);
+	return ((long)tv.tv_usec - p->initial_time);
 }
 
 void	ph_print(char *str, int i, t_philo *p)
 {
 	pthread_mutex_lock(&(p->write_mutex));
-	printf("%lu %i %s\n", get_time(p) - p->initial_time, i, str);
+	if (p->death == false)
+		printf("%lu %i %s\n", get_time(p), i, str);
 	pthread_mutex_unlock(&(p->write_mutex));
 }
 

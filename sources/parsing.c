@@ -6,7 +6,7 @@
 /*   By: dani <dani@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/01 09:00:38 by dani              #+#    #+#             */
-/*   Updated: 2024/09/04 20:43:57 by dani             ###   ########.fr       */
+/*   Updated: 2024/09/05 03:19:06 by dani             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,16 +19,17 @@ int	parsing(t_philo	*p, int argc, char **argv)
 		return (0);
 	if (!initiate_args(p, argc, argv))
 		return (0);
-	p->initial_time = get_time(p);
-	p->initial_time = get_time(p);
+	p->initial_time = get_time(p);	
 	if (!initiate_struct_phi(p))
 		return (0);
 	if (!initiate_mutex(p))
 		return (0);
+	if (pthread_mutex_init(&(p->death_mutex), NULL))
+		return (ph_error("Cannot initiate meal_mutex\n", p), 0);
+	p->death_mutex_initialized = true;
 	if (pthread_mutex_init(&(p->write_mutex), NULL))
 		return (ph_error("Cannot initiate write_mutex\n", p), 0);
-/* 	if (pthread_mutex_init(&(p->meal_mutex), NULL))
-		return (ph_error("Cannot initiate meal_mutex\n", p), 0); */
+	p->write_mutex_initialized = true;
 	return (1);
 }
 
@@ -44,7 +45,7 @@ int	check_args(t_philo	*p, char **argv)
 		while (argv[i][x])
 		{
 			if (!('0' <= argv[i][x] && argv[i][x] <= '9'))
-				return (ph_error("Incorrect arguments", p), 0);
+				return (ph_error("Non-number arguments", p), 0);
 			x++;
 		}
 		i++;
@@ -61,10 +62,10 @@ int	initiate_args(t_philo *p, int argc, char **argv)
 	p->time_to_sleep = (long)ft_atoi(argv[4]);
 	if (argc == 6)
 		p->number_of_times_each_philosopher_must_eat = ft_atoi(argv[5]);
-	if (p->number_of_philosophers < 1 || p->time_to_die < 0 || \
-	p->time_to_eat < 0 || p->time_to_sleep < 0 || (argc == 6 && \
-	p->number_of_times_each_philosopher_must_eat < 0))
-		return (ph_error("Incorrect args values", p), 0);
+	if (p->number_of_philosophers < 1 || p->time_to_die < 1 || \
+	p->time_to_eat < 1 || p->time_to_sleep < 1 || (argc == 6 && \
+	p->number_of_times_each_philosopher_must_eat < 1))
+		return (ph_error("Arguments must be non-zero positive numbers", p), 0);
 	return (1);
 }
 

@@ -6,7 +6,7 @@
 /*   By: dani <dani@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/01 09:02:17 by dani              #+#    #+#             */
-/*   Updated: 2024/09/04 19:03:41 by dani             ###   ########.fr       */
+/*   Updated: 2024/09/05 03:01:23 by dani             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,10 +20,23 @@ void	start_threads(t_philo *p)
 	i = 0;
 	while (i < p->number_of_philosophers)
 	{
-		if (!p->phi[i].last_meal)
-			ph_error("Couldn't get_time", p);
 		if (pthread_create(&(p->phi[i].th), NULL, &routine, &(p->phi[i])))
 			ph_error("Failed to create thread", p);
+		usleep(1);
+		i++;
+	}
+	stop_condition(p);
+	i = 0;
+	while (i < p->number_of_philosophers)
+	{	
+
+		printf("preJOINED %i\n", p->phi[i].index);
+		
+		if (pthread_join(p->phi[i].th, NULL))
+			ph_error("Failed to join thread", p);
+		
+		printf("JOINED %i\n", p->phi[i].index);
+		
 		i++;
 	}
 }
@@ -38,14 +51,13 @@ void	*routine(void *philosopher_struct)
 	p = phi->philo;
 	while (p->death == false && p->max_meals == false)
 	{
-		use_mutex(phi, LOCK);
-		/* pthread_mutex_lock(&(p->meal_mutex)); */
-		phi->last_meal = get_time(phi->philo);
-		phi->times_eaten++;
-		ph_print("is eating", phi->index, phi->philo);
-		usleep(p->time_to_eat);
-		/* pthread_mutex_unlock(&(p->meal_mutex)); */
-		use_mutex(phi, UNLOCK);
+		forks(phi, LOCK);
+		if (!philo_eat(phi))
+		{
+			forks(phi, UNLOCK);
+			break;
+		}
+		forks(phi, UNLOCK);
 		ph_print("is sleeping", phi->index, p);
 		usleep(p->time_to_sleep);
 		ph_print("is thinking", phi->index, p);
@@ -54,7 +66,7 @@ void	*routine(void *philosopher_struct)
 }
 
 //philosophers take the forks
-void	use_mutex(t_phisolopher *phi, int i)
+void	forks(t_phisolopher *phi, int i)
 {
 	t_philo	*p;
 
@@ -77,4 +89,23 @@ void	use_mutex(t_phisolopher *phi, int i)
 		else
 			pthread_mutex_unlock(&(p->mutex[0]));
 	}
+}
+
+int	philo_eat(t_phisolopher *phi)
+{
+	t_philo	*p;
+
+	p = phi->philo;
+	pthread_mutex_lock(&(p->death_mutex));
+	if (p->death == false)
+	{
+		phi->last_meal = get_time(phi->philo);		
+		ph_print("is eating", phi->index, phi->philo);
+		phi->times_eaten++;
+		usleep(p->time_to_eat);
+		pthread_mutex_unlock(&(p->death_mutex));
+		return (pthread_mutex_unlock(&(p->death_mutex)), 1);
+	}
+	else
+		return (pthread_mutex_unlock(&(p->death_mutex)), 0);
 }

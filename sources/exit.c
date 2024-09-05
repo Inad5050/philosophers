@@ -6,7 +6,7 @@
 /*   By: dani <dani@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/01 08:50:21 by dani              #+#    #+#             */
-/*   Updated: 2024/09/04 18:19:07 by dani             ###   ########.fr       */
+/*   Updated: 2024/09/05 03:20:05 by dani             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,10 @@ void	free_memory(t_philo *p)
 			pthread_mutex_destroy(&(p->mutex[i++]));
 		free(p->mutex);
 	}
-	pthread_mutex_destroy(&(p->write_mutex));
+	if (p->death_mutex_initialized)
+		pthread_mutex_destroy(&(p->death_mutex));
+	if (p->write_mutex_initialized)
+		pthread_mutex_destroy(&(p->write_mutex));
 	if (p)
 		free(p);
 }
