@@ -6,7 +6,7 @@
 /*   By: dani <dani@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 14:11:29 by dani              #+#    #+#             */
-/*   Updated: 2024/09/06 03:59:37 by dani             ###   ########.fr       */
+/*   Updated: 2024/09/06 18:13:07 by dani             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,16 +38,25 @@ void	check_death(t_phisolopher *phi)
 	t_philo			*p;
 
 	p = phi->philo;
-	if ((get_time(p) - phi->last_meal) >= p->time_to_die)
+	
+	long  time;
+	
+	pthread_mutex_lock(&(phi->checker_mutex));
+
+	time = get_time(p);
+	
+	if ((time - phi->last_meal) >= p->time_to_die)
 	{
-		printf("DEAD get_time - phi->last_meal >= p->time_to_die %lu %lu %lu\n", get_time(p), phi->last_meal, p->time_to_die);
-		pthread_mutex_lock(&(phi->checker_mutex));
-		p->death = true;
-		pthread_mutex_unlock(&(phi->checker_mutex));
+		printf("DEAD get_time - phi->last_meal >= p->time_to_die %lu %lu %lu\n", time, phi->last_meal, p->time_to_die);
+		
+		/* pthread_mutex_lock(&(phi->checker_mutex)); */
 		pthread_mutex_lock(&(p->write_mutex));
-		printf("%lu %i %s\n", get_time(p), phi->index, "has died");
+		p->death = true;
+		printf("%lu %i has died\n", get_time(p), phi->index);
 		pthread_mutex_unlock(&(p->write_mutex));
+		/* pthread_mutex_unlock(&(phi->checker_mutex)); */
 	}
+	pthread_mutex_unlock(&(phi->checker_mutex));
 }
 	
 //check if all philosophers are full (if argc = 6)
