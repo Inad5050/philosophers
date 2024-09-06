@@ -6,7 +6,7 @@
 /*   By: dani <dani@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/01 09:00:38 by dani              #+#    #+#             */
-/*   Updated: 2024/09/06 01:39:47 by dani             ###   ########.fr       */
+/*   Updated: 2024/09/06 03:37:20 by dani             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,7 +96,7 @@ int	initiate_forks(t_philo	*p)
 
 	i = 0;
 	x = 0;
-	p->forks = ft_calloc(p->number_of_philosophers + 1, \
+	p->forks = ft_calloc(p->number_of_philosophers, \
 	sizeof(pthread_mutex_t));
 	if (!p->forks)
 		ph_error("Cannot allocate memory for p->forks\n", p);
@@ -105,7 +105,7 @@ int	initiate_forks(t_philo	*p)
 		if (pthread_mutex_init(&(p->forks[i]), NULL))
 		{
 			while (x < i)
-				pthread_mutex_destroy(&(p->forks[x]));
+				pthread_mutex_destroy(&(p->forks[x++]));
 			free(p->forks);
 			return (ph_error("Failed to initiate forks\n", p), 0);
 		}

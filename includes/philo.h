@@ -6,7 +6,7 @@
 /*   By: dani <dani@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/30 19:03:59 by dani              #+#    #+#             */
-/*   Updated: 2024/09/06 01:39:57 by dani             ###   ########.fr       */
+/*   Updated: 2024/09/06 03:15:59 by dani             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ void	ft_putstr_fd(char *s, int fd);
 //checker
 void	*checker(void *philosopher_struct);
 void	check_death(t_phisolopher *phi);
-void	check_max_meals(t_philo *p);
+void	check_max_meals(t_phisolopher *phi);
 
 //exit
 void	ph_error(char *str, t_philo *p);
