@@ -6,7 +6,7 @@
 /*   By: dani <dani@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 14:11:29 by dani              #+#    #+#             */
-/*   Updated: 2024/09/06 03:29:14 by dani             ###   ########.fr       */
+/*   Updated: 2024/09/06 03:59:37 by dani             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,8 @@ void	*checker(void *philosopher_struct)
 	while (p->death == false && p->max_meals == false)
 	{
 		check_death(phi);
-		check_max_meals(phi);
+		if (p->number_of_times_each_philosopher_must_eat)
+			check_max_meals(phi);
 	}
 	
 	printf("CHECKER ended index %i\n", phi->index);
@@ -59,17 +60,17 @@ void	check_max_meals(t_phisolopher *phi)
 	i = 0;
 	while (i < p->number_of_philosophers)
 	{
-		if (p->number_of_times_each_philosopher_must_eat && \
-		p->phi[i].times_eaten < p->number_of_times_each_philosopher_must_eat)
+		if (p->phi[i].times_eaten < p->number_of_times_each_philosopher_must_eat)
 			break;
-		if (i == p->number_of_philosophers - 1)
-		{
-			pthread_mutex_lock(&(phi->checker_mutex));
-			p->max_meals = true;
-			pthread_mutex_unlock(&(phi->checker_mutex));
-			pthread_mutex_lock(&(p->write_mutex));
-			printf("%lu %s\n", get_time(p),	"all philosophers are full");
-			pthread_mutex_unlock(&(p->write_mutex));
-		}
+		i++;
+	}
+	if (i == p->number_of_philosophers - 1)
+	{
+		pthread_mutex_lock(&(phi->checker_mutex));
+		p->max_meals = true;
+		pthread_mutex_unlock(&(phi->checker_mutex));
+		pthread_mutex_lock(&(p->write_mutex));
+		printf("%lu %s\n", get_time(p),	"all philosophers are full");
+		pthread_mutex_unlock(&(p->write_mutex));
 	}
 }

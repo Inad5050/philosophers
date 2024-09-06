@@ -6,7 +6,7 @@
 /*   By: dani <dani@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/01 09:02:17 by dani              #+#    #+#             */
-/*   Updated: 2024/09/06 03:32:25 by dani             ###   ########.fr       */
+/*   Updated: 2024/09/06 03:52:48 by dani             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,25 +68,21 @@ void	*routine(void *philosopher_struct)
 void	forks(t_phisolopher *phi, int i)
 {
 	t_philo	*p;
+	int		second_fork;
 
 	p = phi->philo;
+	second_fork = (phi->index + 1) % p->number_of_philosophers;
 	if (i == LOCK)
 	{
 		pthread_mutex_lock(&(p->forks[phi->index]));
 		ph_print("has taken a fork", phi->index, p);
-		if (phi->index != p->number_of_philosophers - 1)
-			pthread_mutex_lock(&(p->forks[phi->index + 1]));
-		else
-			pthread_mutex_lock(&(p->forks[0]));
+		pthread_mutex_lock(&(p->forks[second_fork]));
 		ph_print("has taken a fork", phi->index, p);
 	}
 	if (i == UNLOCK)
 	{
 		pthread_mutex_unlock(&(p->forks[phi->index]));
-		if (phi->index != p->number_of_philosophers - 1)
-			pthread_mutex_unlock(&(p->forks[phi->index + 1]));
-		else
-			pthread_mutex_unlock(&(p->forks[0]));
+		pthread_mutex_unlock(&(p->forks[second_fork]));
 	}
 }
 
