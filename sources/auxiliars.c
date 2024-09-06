@@ -6,7 +6,7 @@
 /*   By: dani <dani@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 18:36:42 by dani              #+#    #+#             */
-/*   Updated: 2024/09/06 18:12:52 by dani             ###   ########.fr       */
+/*   Updated: 2024/09/07 01:44:17 by dani             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ long	get_time(t_philo *p)
 void	ph_print(char *str, int i, t_philo *p)
 {
 	pthread_mutex_lock(&(p->write_mutex));
-	if (p->death == false)
+	if (p->death == false && p->max_meals == false)
 		printf("%lu %i %s\n", get_time(p) - p->initial_time, i, str);
 	pthread_mutex_unlock(&(p->write_mutex));
 }
@@ -74,16 +74,4 @@ int	ft_atoi(const char *str)
 		str++;
 	}
 	return (b * a);
-}
-
-void	ft_putstr_fd(char *s, int fd)
-{
-	if (s == NULL)
-		return ;
-	while (*s)
-	{
-		write(fd, s, 1);
-		s++;
-	}
-	write(fd, "\n", 1);
 }

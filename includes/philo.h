@@ -6,7 +6,7 @@
 /*   By: dani <dani@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/30 19:03:59 by dani              #+#    #+#             */
-/*   Updated: 2024/09/06 18:14:02 by dani             ###   ########.fr       */
+/*   Updated: 2024/09/07 01:50:39 by dani             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,6 @@ void	ph_print(char *str, int i, t_philo *p);
 void	ft_usleep(long time, t_philo *p);
 void	*ft_calloc(size_t count, size_t size);
 int		ft_atoi(const char *str);
-void	ft_putstr_fd(char *s, int fd);
 
 //checker
 void	*checker(void *philosopher_struct);
@@ -87,3 +86,10 @@ void	forks(t_phisolopher *phi, int i);
 void	philo_eat(t_phisolopher *phi);
 
 #endif
+
+/* 
+if (phi->index == 0)
+	printf("(DEAD get_time - phi[%i]->last_meal) == result\
+>= p->time_to_die %lu %lu %lu %lu\n", phi->index, time, \
+phi->last_meal, time - phi->last_meal, p->time_to_die);
+*/

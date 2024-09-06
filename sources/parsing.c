@@ -6,7 +6,7 @@
 /*   By: dani <dani@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/01 09:00:38 by dani              #+#    #+#             */
-/*   Updated: 2024/09/06 16:40:55 by dani             ###   ########.fr       */
+/*   Updated: 2024/09/07 01:44:40 by dani             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ int	parsing(t_philo	*p, int argc, char **argv)
 		return (0);
 	if (!initiate_args(p, argc, argv))
 		return (0);
-	p->initial_time = get_time(p);	
+	p->initial_time = get_time(p);
 	if (!initiate_struct_phi(p))
 		return (0);
 	if (!initiate_forks(p))
@@ -54,9 +54,9 @@ int	check_args(t_philo	*p, char **argv)
 int	initiate_args(t_philo *p, int argc, char **argv)
 {
 	p->number_of_philosophers = ft_atoi(argv[1]);
-	p->time_to_die = (uint64_t)ft_atoi(argv[2]);
-	p->time_to_eat = (uint64_t)ft_atoi(argv[3]);
-	p->time_to_sleep = (uint64_t)ft_atoi(argv[4]);
+	p->time_to_die = (long)ft_atoi(argv[2]);
+	p->time_to_eat = (long)ft_atoi(argv[3]);
+	p->time_to_sleep = (long)ft_atoi(argv[4]);
 	if (argc == 6)
 		p->number_of_times_each_philosopher_must_eat = ft_atoi(argv[5]);
 	if (p->number_of_philosophers < 1 || p->time_to_die < 1 || \

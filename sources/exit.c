@@ -6,7 +6,7 @@
 /*   By: dani <dani@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/01 08:50:21 by dani              #+#    #+#             */
-/*   Updated: 2024/09/06 01:39:08 by dani             ###   ########.fr       */
+/*   Updated: 2024/09/07 01:44:01 by dani             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 //exit the function with an error message
 void	ph_error(char *str, t_philo *p)
 {
-	ft_putstr_fd(str, 2);
+	printf("%s\n", str);
 	free_memory(p);
 }
 

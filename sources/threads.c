@@ -6,38 +6,40 @@
 /*   By: dani <dani@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/01 09:02:17 by dani              #+#    #+#             */
-/*   Updated: 2024/09/06 16:46:18 by dani             ###   ########.fr       */
+/*   Updated: 2024/09/07 01:45:24 by dani             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/philo.h"
 
-//initialize threads & end them
 void	start_threads(t_philo *p)
 {
 	int	i;
 
 	i = 0;
 	while (i < p->number_of_philosophers)
-	{		
+	{
 		if (pthread_create(&(p->phi[i].th), NULL, &routine, &(p->phi[i])))
-			ph_error("Failed to create thread", p);		
+			ph_error("Failed to create thread", p);
 		ft_usleep(1, p);
 		i++;
 	}
 	i = 0;
+	if (p->number_of_philosophers == 1)
+	{
+		pthread_detach(p->phi[0].th);
+		while (p->death == false)
+			ft_usleep(0, p);
+		return ;
+	}
 	while (i < p->number_of_philosophers)
-	{			
+	{
 		if (pthread_join(p->phi[i].th, NULL))
 			ph_error("Failed to join thread", p);
-		
-		printf("JOINED %i\n", p->phi[i].index);
-		
 		i++;
 	}
 }
 
-//make philosphers take the forks, eat, sleep and think
 void	*routine(void *philosopher_struct)
 {
 	t_phisolopher	*phi;
@@ -57,9 +59,6 @@ void	*routine(void *philosopher_struct)
 	}
 	if (pthread_join(phi->th_checker, NULL))
 		ph_error("Failed to join thread", p);
-	
-	printf("ROUTINE ended index = %i\n", phi->index);
-	
 	return (NULL);
 }
 
@@ -68,18 +67,16 @@ void	philo_eat(t_phisolopher *phi)
 	t_philo	*p;
 
 	p = phi->philo;
-	pthread_mutex_lock(&(phi->checker_mutex));
 	forks(phi, LOCK);
+	pthread_mutex_lock(&(phi->checker_mutex));
 	phi->last_meal = get_time(phi->philo);
 	ph_print("is eating", phi->index, phi->philo);
 	ft_usleep(p->time_to_eat, p);
-	forks(phi, UNLOCK);
 	phi->times_eaten++;
-	pthread_mutex_unlock(&(phi->checker_mutex));	
+	pthread_mutex_unlock(&(phi->checker_mutex));
+	forks(phi, UNLOCK);
 }
 
-/* philosophers take the forks, they alternate between 
-taking the left or right one first to prevent deadlocks */
 void	forks(t_phisolopher *phi, int i)
 {
 	t_philo	*p;
