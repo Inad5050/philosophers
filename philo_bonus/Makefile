@@ -6,11 +6,10 @@
 #    By: dani <dani@student.42.fr>                  +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/08/30 19:01:54 by dani              #+#    #+#              #
-#    Updated: 2024/09/05 19:37:56 by dani             ###   ########.fr        #
+#    Updated: 2024/09/08 01:52:04 by dani             ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-NAME = philo
 NAME_BONUS = philo_bonus
 CC = gcc
 CCFLAGS = -Wall -Wextra -Werror
@@ -20,36 +19,24 @@ COLOR_GREEN = \033[0;32m
 COLOR_RESET = \033[0m
 
 #sources
-SRC_DIR = sources/
-SRC_FILES =  auxiliars.c checker.c exit.c main.c parsing.c threads.c
-SRC = $(addprefix $(SRC_DIR), $(SRC_FILES))
-OBJ = $(SRC:.c=.o)
-
-SRC_BONUS_DIR = sources_bonus/
-SRC_BONUS_FILES = 
+SRC_BONUS_DIR = ./
+SRC_BONUS_FILES = auxiliars_bonus.c checker_bonus.c exit_bonus.c main_bonus.c parsing_bonus.c threads_bonus.c
 SRC_BONUS = $(addprefix $(SRC_BONUS_DIR), $(SRC_BONUS_FILES))
 OBJ_BONUS = $(SRC_BONUS:.c=.o)
 
 #headers
-INCLUDE = -I./includes/
+INCLUDE = -I./
 
-#program
-all: $(NAME)
+#bonus
+all: $(NAME_BONUS)
 	@echo "$(COLOR_GREEN)------------ PROCESS FINISHED ------------ $(COLOR_RESET)"
 
-$(NAME): $(OBJ)
-	$(CC) $(CCFLAGS) $(OBJ) -o $(NAME) $(INCLUDE)
+$(NAME_BONUS): $(OBJ_BONUS)
+	$(CC) $(CCFLAGS) $(OBJ_BONUS) -o $(NAME_BONUS)
 
 %.o: %.c
 	$(CC) $(CCFLAGS) -c $< -o $@ $(INCLUDE)
 	@echo "$(COLOR_GREEN)------------ MESSAGE: $@ COMPILED ------------ $(COLOR_RESET)"
-	
-#bonus
-bonus: $(NAME_BONUS)
-	@echo "$(COLOR_GREEN)------------ PROCESS FINISHED ------------ $(COLOR_RESET)"
-
-$(NAME_BONUS): $(OBJ_BONUS)
-	$(CC) $(CCFLAGS) $(OBJ_BONUS) -o $(NAME) $(INCLUDE)
 
 #additional
 clean:
@@ -65,7 +52,5 @@ fclean:
 	@echo "$(COLOR_GREEN)------------ MESSAGE: CLEANING COMPLETED ------------ $(COLOR_RESET)"
 
 re: fclean all
-
-rebonus: fclean bonus
 
 .PHONY:	all clean fclean re

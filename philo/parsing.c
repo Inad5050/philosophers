@@ -6,13 +6,12 @@
 /*   By: dani <dani@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/01 09:00:38 by dani              #+#    #+#             */
-/*   Updated: 2024/09/07 01:44:40 by dani             ###   ########.fr       */
+/*   Updated: 2024/09/07 10:08:18 by dani             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/philo.h"
+#include "philo.h"
 
-//check if args are positive numbers
 int	parsing(t_philo	*p, int argc, char **argv)
 {
 	if (!check_args(p, argv))
@@ -30,6 +29,7 @@ int	parsing(t_philo	*p, int argc, char **argv)
 	return (1);
 }
 
+//check if args are positive numbers
 int	check_args(t_philo	*p, char **argv)
 {
 	int	i;
@@ -87,7 +87,7 @@ int	initiate_struct_phi(t_philo	*p)
 	return (1);
 }
 
-//start mutexs
+//start fork_mutexs
 int	initiate_forks(t_philo	*p)
 {
 	int	i;

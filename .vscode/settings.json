@@ -1,8 +1,0 @@
-{
-	"files.associations": {
-		"philo.h": "c",
-		"inttypes.h": "c",
-		"types.h": "c",
-		"compare": "c"
-	}
-}

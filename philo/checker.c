@@ -6,11 +6,11 @@
 /*   By: dani <dani@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 14:11:29 by dani              #+#    #+#             */
-/*   Updated: 2024/09/07 01:48:29 by dani             ###   ########.fr       */
+/*   Updated: 2024/09/07 10:11:19 by dani             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/philo.h"
+#include "philo.h"
 
 //check if threads should stop
 void	*checker(void *philosopher_struct)
@@ -48,7 +48,7 @@ void	check_death(t_phisolopher *phi)
 	}
 }
 
-//check if all philosophers are full (if argc = 6)
+//check if all philosophers are full
 void	check_max_meals(t_phisolopher *phi)
 {
 	int		i;

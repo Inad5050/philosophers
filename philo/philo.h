@@ -6,7 +6,7 @@
 /*   By: dani <dani@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/30 19:03:59 by dani              #+#    #+#             */
-/*   Updated: 2024/09/07 01:50:39 by dani             ###   ########.fr       */
+/*   Updated: 2024/09/07 01:59:48 by dani             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,8 +53,6 @@ struct s_philo
 	bool			death;
 	bool			max_meals;
 };
-
-void	print_everything(t_philo *p);
 
 //auxiliars
 long	get_time(t_philo *p);

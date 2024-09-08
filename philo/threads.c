@@ -6,12 +6,13 @@
 /*   By: dani <dani@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/01 09:02:17 by dani              #+#    #+#             */
-/*   Updated: 2024/09/07 01:45:24 by dani             ###   ########.fr       */
+/*   Updated: 2024/09/07 10:11:02 by dani             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/philo.h"
+#include "philo.h"
 
+//start the philosophers and wait for them to finish
 void	start_threads(t_philo *p)
 {
 	int	i;
@@ -40,6 +41,7 @@ void	start_threads(t_philo *p)
 	}
 }
 
+//start the checkers
 void	*routine(void *philosopher_struct)
 {
 	t_phisolopher	*phi;
@@ -62,6 +64,7 @@ void	*routine(void *philosopher_struct)
 	return (NULL);
 }
 
+//feed philosophers
 void	philo_eat(t_phisolopher *phi)
 {
 	t_philo	*p;
@@ -77,6 +80,7 @@ void	philo_eat(t_phisolopher *phi)
 	forks(phi, UNLOCK);
 }
 
+//take the forks
 void	forks(t_phisolopher *phi, int i)
 {
 	t_philo	*p;

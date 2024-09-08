@@ -6,11 +6,11 @@
 /*   By: dani <dani@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/30 19:02:23 by dani              #+#    #+#             */
-/*   Updated: 2024/09/07 01:39:45 by dani             ###   ########.fr       */
+/*   Updated: 2024/09/07 10:07:36 by dani             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/philo.h"
+#include "philo.h"
 
 int	main(int argc, char **argv)
 {
