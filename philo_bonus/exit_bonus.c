@@ -6,7 +6,7 @@
 /*   By: dani <dani@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/01 08:50:21 by dani              #+#    #+#             */
-/*   Updated: 2024/09/08 01:44:34 by dani             ###   ########.fr       */
+/*   Updated: 2024/09/09 00:28:12 by dani             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,18 +28,19 @@ void	free_memory(t_philo *p)
 	if (p->phi)
 	{
 		while (i < p->number_of_philosophers)
-			pthread_mutex_destroy(&(p->phi[i++].checker_mutex));
+		{
+			if (p->phi[i].checker_sem_created)
+				sem_unlink(p->phi[i].checker_sem_name);
+			if (p->phi[i].checker_sem_name)
+				free(p->phi[i].checker_sem_name);
+			i++;
+		}
 		free(p->phi);
 	}
-	i = 0;
-	if (p->forks)
-	{
-		while (i < p->number_of_philosophers)
-			pthread_mutex_destroy(&(p->forks[i++]));
-		free(p->forks);
-	}
-	if (p->write_mutex_initialized)
-		pthread_mutex_destroy(&(p->write_mutex));
+	if (p->forks_sem_created)
+		sem_unlink("/forks_sem");
+	if (p->write_sem_created)
+		sem_unlink("/write_sem");
 	if (p)
 		free(p);
 }

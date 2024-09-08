@@ -6,7 +6,7 @@
 /*   By: dani <dani@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/01 09:00:38 by dani              #+#    #+#             */
-/*   Updated: 2024/09/08 01:44:40 by dani             ###   ########.fr       */
+/*   Updated: 2024/09/09 00:28:49 by dani             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 
 int	parsing(t_philo	*p, int argc, char **argv)
 {
+	
 	if (!check_args(p, argv))
 		return (0);
 	if (!initiate_args(p, argc, argv))
@@ -21,11 +22,8 @@ int	parsing(t_philo	*p, int argc, char **argv)
 	p->initial_time = get_time(p);
 	if (!initiate_struct_phi(p))
 		return (0);
-	if (!initiate_forks(p))
+	if (!initiate_sems(p))
 		return (0);
-	if (pthread_mutex_init(&(p->write_mutex), NULL))
-		return (ph_error("Cannot initiate write_mutex\n", p), 0);
-	p->write_mutex_initialized = true;
 	return (1);
 }
 
@@ -69,7 +67,7 @@ int	initiate_args(t_philo *p, int argc, char **argv)
 //fill struct phi
 int	initiate_struct_phi(t_philo	*p)
 {
-	int	i;
+	int		i;
 
 	i = 0;
 	p->phi = ft_calloc(p->number_of_philosophers, sizeof(t_phisolopher));
@@ -79,35 +77,31 @@ int	initiate_struct_phi(t_philo	*p)
 	{
 		p->phi[i].index = i;
 		p->phi[i].philo = p;
-		if (pthread_mutex_init(&(p->phi[i].checker_mutex), NULL))
-			return (ph_error("Cannot initiate meal_mutex\n", p), 0);
-		p->phi[i].checker_mutex_initialized = true;
+		p->phi[i].checker_sem_name = ph_strjoin("/checker_sem", i + '0');
+		if (!p->phi[i].checker_sem_name)
+			return (ph_error("Cannot ph_strjoin checker_sem_name\n", p), 0);
+		p->phi[i].checker_sem = sem_open(p->phi[i].checker_sem_name, \
+		O_CREAT | O_EXCL, S_IRUSR | S_IWUSR, 1);
+		if (p->phi[i].checker_sem == SEM_FAILED)
+			return (ph_error("Cannot create checker_sem\n", p), 0);
+		p->phi[i].checker_sem_created = true;
 		i++;
 	}
 	return (1);
 }
 
-//start fork_mutexs
-int	initiate_forks(t_philo	*p)
+//create sems
+int	initiate_sems(t_philo	*p)
 {
-	int	i;
-	int	x;
-
-	i = 0;
-	x = 0;
-	p->forks = ft_calloc(p->number_of_philosophers, sizeof(pthread_mutex_t));
-	if (!p->forks)
-		ph_error("Cannot allocate memory for p->forks\n", p);
-	while (i < p->number_of_philosophers)
-	{
-		if (pthread_mutex_init(&(p->forks[i]), NULL))
-		{
-			while (x < i)
-				pthread_mutex_destroy(&(p->forks[x++]));
-			free(p->forks);
-			return (ph_error("Failed to initiate forks\n", p), 0);
-		}
-		i++;
-	}
+	p->forks_sem = sem_open("/forks_sem", \
+	O_CREAT | O_EXCL, S_IRUSR | S_IWUSR, p->number_of_philosophers);
+	if (p->forks_sem == SEM_FAILED)
+		return (ph_error("Cannot create forks_sem\n", p), 0);
+	p->forks_sem_created = true;
+	p->write_sem = sem_open("/write_sem", \
+	O_CREAT |	O_EXCL, S_IRUSR | S_IWUSR, 1);
+	if (p->write_sem == SEM_FAILED)
+		return (ph_error("Cannot create write_semaphore\n", p), 0);
+	p->write_sem_created = true;
 	return (1);
 }

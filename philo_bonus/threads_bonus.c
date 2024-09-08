@@ -6,12 +6,13 @@
 /*   By: dani <dani@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/01 09:02:17 by dani              #+#    #+#             */
-/*   Updated: 2024/09/08 02:10:36 by dani             ###   ########.fr       */
+/*   Updated: 2024/09/09 00:36:31 by dani             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo_bonus.h"
 
+//start the process and wait for all of them
 void	start_process(t_philo *p)
 {
 	int		i;
@@ -25,44 +26,15 @@ void	start_process(t_philo *p)
 			ph_error("Cannot fork()", p);
 		if (!pid)
 			routine(&(p->phi[0]));
+		i++;
 	}
 	waitpid(-1, NULL, 0);
 }
 
-
-//start the philosophers and wait for them to finish
-/* void	start_threads(t_philo *p)
-{
-	int	i;
-
-	i = 0;
-	while (i < p->number_of_philosophers)
-	{
-		if (pthread_create(&(p->phi[i].th), NULL, &routine, &(p->phi[i])))
-			ph_error("Failed to create thread", p);
-		ft_usleep(1, p);
-		i++;
-	}
-	i = 0;
-	if (p->number_of_philosophers == 1)
-	{
-		pthread_detach(p->phi[0].th);
-		while (p->death == false)
-			ft_usleep(0, p);
-		return ;
-	}
-	while (i < p->number_of_philosophers)
-	{
-		if (pthread_join(p->phi[i].th, NULL))
-			ph_error("Failed to join thread", p);
-		i++;
-	}
-} */
-
 //start the checkers
 void	routine(t_phisolopher	*phi)
 {
-	t_philo			*p;
+	t_philo	*p;
 
 	p = phi->philo;
 	phi->last_meal = get_time(p);
@@ -77,7 +49,9 @@ void	routine(t_phisolopher	*phi)
 	}
 	if (pthread_join(phi->th_checker, NULL))
 		ph_error("Failed to join thread", p);
-	return (NULL);
+	sem_close(p->forks_sem);
+	sem_close(p->write_sem);
+	sem_close(phi->checker_sem);		
 }
 
 //feed philosophers
@@ -87,12 +61,12 @@ void	philo_eat(t_phisolopher *phi)
 
 	p = phi->philo;
 	forks(phi, LOCK);
-	pthread_mutex_lock(&(phi->checker_mutex));
+	sem_wait(phi->checker_sem);	
 	phi->last_meal = get_time(phi->philo);
 	ph_print("is eating", phi->index, phi->philo);
 	ft_usleep(p->time_to_eat, p);
 	phi->times_eaten++;
-	pthread_mutex_unlock(&(phi->checker_mutex));
+	sem_post(phi->checker_sem);	
 	forks(phi, UNLOCK);
 }
 
@@ -100,23 +74,18 @@ void	philo_eat(t_phisolopher *phi)
 void	forks(t_phisolopher *phi, int i)
 {
 	t_philo	*p;
-	int		second_fork;
 
 	p = phi->philo;
-	second_fork = (phi->index + 1) % p->number_of_philosophers;
 	if (i == LOCK)
 	{
-		if (phi->index % 2 == 0)
-			pthread_mutex_lock(&(p->forks[second_fork]));
-		pthread_mutex_lock(&(p->forks[phi->index]));
+		sem_wait(p->forks_sem);
 		ph_print("has taken a fork", phi->index, p);
-		if (phi->index % 2 != 0)
-			pthread_mutex_lock(&(p->forks[second_fork]));
+		sem_wait(p->forks_sem);
 		ph_print("has taken a fork", phi->index, p);
 	}
 	if (i == UNLOCK)
 	{
-		pthread_mutex_unlock(&(p->forks[phi->index]));
-		pthread_mutex_unlock(&(p->forks[second_fork]));
+		sem_post(p->forks_sem);	
+		sem_post(p->forks_sem);	
 	}
 }

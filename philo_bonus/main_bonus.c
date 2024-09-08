@@ -6,7 +6,7 @@
 /*   By: dani <dani@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/30 19:02:23 by dani              #+#    #+#             */
-/*   Updated: 2024/09/08 01:44:37 by dani             ###   ########.fr       */
+/*   Updated: 2024/09/09 00:08:27 by dani             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ int	main(int argc, char **argv)
 		return (printf("Cannot allocate memory for t_philo\n"), 1);
 	if (!parsing(p, argc, argv))
 		return (1);
-	start_threads(p);
+	start_process(p);
 	free_memory(p);
 	return (0);
 }
