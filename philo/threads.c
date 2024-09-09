@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   threads.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dani <dani@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: dangonz3 <dangonz3@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/01 09:02:17 by dani              #+#    #+#             */
-/*   Updated: 2024/09/07 10:11:02 by dani             ###   ########.fr       */
+/*   Updated: 2024/09/09 16:49:50 by dangonz3         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,14 @@ void	start_threads(t_philo *p)
 {
 	int	i;
 
+	if (p->number_of_philosophers == 1)
+	{
+		if (pthread_create(&(p->phi[0].th), NULL, &one_philo, &(p->phi[0])))
+			ph_error("Failed to create thread", p);
+		while (p->death == false)
+			ft_usleep(0, p);
+		return;
+	}
 	i = 0;
 	while (i < p->number_of_philosophers)
 	{
@@ -26,13 +34,6 @@ void	start_threads(t_philo *p)
 		i++;
 	}
 	i = 0;
-	if (p->number_of_philosophers == 1)
-	{
-		pthread_detach(p->phi[0].th);
-		while (p->death == false)
-			ft_usleep(0, p);
-		return ;
-	}
 	while (i < p->number_of_philosophers)
 	{
 		if (pthread_join(p->phi[i].th, NULL))
@@ -103,4 +104,25 @@ void	forks(t_phisolopher *phi, int i)
 		pthread_mutex_unlock(&(p->forks[phi->index]));
 		pthread_mutex_unlock(&(p->forks[second_fork]));
 	}
+}
+
+void	*one_philo(void *philosopher_struct)
+{
+	t_phisolopher	*phi;
+	t_philo			*p;
+
+	phi = (t_phisolopher *)philosopher_struct;
+	p = phi->philo;
+	phi->last_meal = get_time(p);
+	pthread_mutex_lock(&(phi->checker_mutex));
+	pthread_mutex_lock(&(p->forks[phi->index]));
+	ph_print("has taken a fork", phi->index, p);
+	pthread_mutex_unlock(&(p->forks[phi->index]));
+	pthread_mutex_unlock(&(phi->checker_mutex));
+	if (pthread_create(&(phi->th_checker), NULL, &checker, phi))
+		ph_error("Failed to create thread", p);
+	if (pthread_join(phi->th_checker, NULL))
+		ph_error("Failed to join thread", p);
+	pthread_detach(p->phi[0].th);
+	return (NULL);
 }

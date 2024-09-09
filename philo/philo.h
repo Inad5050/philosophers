@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dani <dani@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: dangonz3 <dangonz3@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/30 19:03:59 by dani              #+#    #+#             */
-/*   Updated: 2024/09/07 01:59:48 by dani             ###   ########.fr       */
+/*   Updated: 2024/09/09 16:28:37 by dangonz3         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,14 +80,15 @@ int		initiate_forks(t_philo	*p);
 //philo
 void	start_threads(t_philo *p);
 void	*routine(void *philosopher_struct);
-void	forks(t_phisolopher *phi, int i);
 void	philo_eat(t_phisolopher *phi);
+void	forks(t_phisolopher *phi, int i);
+void	*one_philo(void *philosopher_struct);
 
 #endif
 
 /* 
-if (phi->index == 0)
-	printf("(DEAD get_time - phi[%i]->last_meal) == result\
->= p->time_to_die %lu %lu %lu %lu\n", phi->index, time, \
-phi->last_meal, time - phi->last_meal, p->time_to_die);
+	if (phi->index == 0)
+		printf("DEAD get_time - phi[%i]->last_meal) == result >= \
+		p->time_to_die %ld %ld %ld %ld\n", phi->index, get_time(p), \
+		phi->last_meal, get_time(p) - phi->last_meal, p->time_to_die);
 */

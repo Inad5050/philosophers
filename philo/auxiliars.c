@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   auxiliars.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dani <dani@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: dangonz3 <dangonz3@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 18:36:42 by dani              #+#    #+#             */
-/*   Updated: 2024/09/07 10:06:58 by dani             ###   ########.fr       */
+/*   Updated: 2024/09/09 13:11:22 by dangonz3         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ void	ph_print(char *str, int i, t_philo *p)
 {
 	pthread_mutex_lock(&(p->write_mutex));
 	if (p->death == false && p->max_meals == false)
-		printf("%lu %i %s\n", get_time(p) - p->initial_time, i, str);
+		printf("%lu %i %s\n", get_time(p) - p->initial_time, i + 1, str);
 	pthread_mutex_unlock(&(p->write_mutex));
 }
 

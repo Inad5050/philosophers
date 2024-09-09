@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dani <dani@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: dangonz3 <dangonz3@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/01 09:00:38 by dani              #+#    #+#             */
-/*   Updated: 2024/09/07 10:08:18 by dani             ###   ########.fr       */
+/*   Updated: 2024/09/09 17:07:09 by dangonz3         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,10 +39,12 @@ int	check_args(t_philo	*p, char **argv)
 	while (argv[i])
 	{
 		x = 0;
+		if (argv[i][x] == '+')
+			x++;
 		while (argv[i][x])
 		{
 			if (!('0' <= argv[i][x] && argv[i][x] <= '9'))
-				return (ph_error("Non-number arguments", p), 0);
+				return (ph_error("Non-number character", p), 0);
 			x++;
 		}
 		i++;
