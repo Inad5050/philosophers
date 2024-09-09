@@ -6,7 +6,7 @@
 /*   By: dani <dani@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 14:11:29 by dani              #+#    #+#             */
-/*   Updated: 2024/09/09 00:02:26 by dani             ###   ########.fr       */
+/*   Updated: 2024/09/09 00:58:02 by dani             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,9 @@ void	*checker(void *philosopher_struct)
 			check_max_meals(phi);
 		sem_post(phi->checker_sem);
 	}
+
+	printf("CHECKER termina index = %i\n", phi->index);
+	
 	return (NULL);
 }
 

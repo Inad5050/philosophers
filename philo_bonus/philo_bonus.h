@@ -6,7 +6,7 @@
 /*   By: dani <dani@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/30 19:03:59 by dani              #+#    #+#             */
-/*   Updated: 2024/09/09 00:08:46 by dani             ###   ########.fr       */
+/*   Updated: 2024/09/09 01:43:46 by dani             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,7 @@ struct s_philo
 	bool			write_sem_created;
 	bool			death;
 	bool			max_meals;
+	bool			sem_already_created;
 };
 
 //auxiliars
@@ -81,10 +82,10 @@ char	*ph_strjoin(char *s1, char c);
 
 //parsing
 int		parsing(t_philo	*p, int argc, char **argv);
-int		check_args(t_philo	*p, char **argv);
+int		check_args(t_philo *p, char **argv);
 int		initiate_args(t_philo *p, int argc, char **argv);
 int		initiate_struct_phi(t_philo	*p);
-int		initiate_sems(t_philo	*p);
+int		initiate_sems(t_philo *p);
 
 //philo
 void	start_process(t_philo *p);

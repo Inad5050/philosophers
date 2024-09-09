@@ -6,7 +6,7 @@
 /*   By: dani <dani@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/01 09:00:38 by dani              #+#    #+#             */
-/*   Updated: 2024/09/09 00:28:49 by dani             ###   ########.fr       */
+/*   Updated: 2024/09/09 01:53:16 by dani             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,9 +99,9 @@ int	initiate_sems(t_philo	*p)
 		return (ph_error("Cannot create forks_sem\n", p), 0);
 	p->forks_sem_created = true;
 	p->write_sem = sem_open("/write_sem", \
-	O_CREAT |	O_EXCL, S_IRUSR | S_IWUSR, 1);
+	O_CREAT | O_EXCL, S_IRUSR | S_IWUSR, 1);
 	if (p->write_sem == SEM_FAILED)
-		return (ph_error("Cannot create write_semaphore\n", p), 0);
-	p->write_sem_created = true;
+		return (ph_error("Cannot create forks_sem\n", p), 0);
+	p->write_sem_created = true;		
 	return (1);
 }

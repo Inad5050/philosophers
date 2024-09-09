@@ -6,7 +6,7 @@
 /*   By: dani <dani@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/01 09:02:17 by dani              #+#    #+#             */
-/*   Updated: 2024/09/09 00:36:31 by dani             ###   ########.fr       */
+/*   Updated: 2024/09/09 01:03:53 by dani             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,10 @@ void	start_process(t_philo *p)
 		if (pid < 0)
 			ph_error("Cannot fork()", p);
 		if (!pid)
-			routine(&(p->phi[0]));
+		{
+			routine(&(p->phi[i]));
+			break;
+		}
 		i++;
 	}
 	waitpid(-1, NULL, 0);
@@ -51,7 +54,9 @@ void	routine(t_phisolopher	*phi)
 		ph_error("Failed to join thread", p);
 	sem_close(p->forks_sem);
 	sem_close(p->write_sem);
-	sem_close(phi->checker_sem);		
+	sem_close(phi->checker_sem);
+	
+	printf("ROUTINE termina index = %i\n", phi->index);	
 }
 
 //feed philosophers
