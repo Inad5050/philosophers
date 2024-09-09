@@ -6,7 +6,7 @@
 /*   By: dangonz3 <dangonz3@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/01 09:02:17 by dani              #+#    #+#             */
-/*   Updated: 2024/09/09 16:49:50 by dangonz3         ###   ########.fr       */
+/*   Updated: 2024/09/09 17:50:10 by dangonz3         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ void	start_threads(t_philo *p)
 		if (pthread_create(&(p->phi[0].th), NULL, &one_philo, &(p->phi[0])))
 			ph_error("Failed to create thread", p);
 		while (p->death == false)
-			ft_usleep(0, p);
+			usleep(0);
 		return;
 	}
 	i = 0;
@@ -30,7 +30,7 @@ void	start_threads(t_philo *p)
 	{
 		if (pthread_create(&(p->phi[i].th), NULL, &routine, &(p->phi[i])))
 			ph_error("Failed to create thread", p);
-		ft_usleep(1, p);
+		usleep(1);
 		i++;
 	}
 	i = 0;
@@ -57,7 +57,7 @@ void	*routine(void *philosopher_struct)
 	{
 		philo_eat(phi);
 		ph_print("is sleeping", phi->index, p);
-		ft_usleep(p->time_to_sleep, p);
+		usleep(p->time_to_sleep * (long)1000);
 		ph_print("is thinking", phi->index, p);
 	}
 	if (pthread_join(phi->th_checker, NULL))
@@ -75,7 +75,7 @@ void	philo_eat(t_phisolopher *phi)
 	pthread_mutex_lock(&(phi->checker_mutex));
 	phi->last_meal = get_time(phi->philo);
 	ph_print("is eating", phi->index, phi->philo);
-	ft_usleep(p->time_to_eat, p);
+	usleep(p->time_to_eat * (long)1000);
 	phi->times_eaten++;
 	pthread_mutex_unlock(&(phi->checker_mutex));
 	forks(phi, UNLOCK);

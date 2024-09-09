@@ -6,7 +6,7 @@
 /*   By: dangonz3 <dangonz3@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/30 19:03:59 by dani              #+#    #+#             */
-/*   Updated: 2024/09/09 16:28:37 by dangonz3         ###   ########.fr       */
+/*   Updated: 2024/09/09 18:04:41 by dangonz3         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,6 @@ struct s_philo
 //auxiliars
 long	get_time(t_philo *p);
 void	ph_print(char *str, int i, t_philo *p);
-void	ft_usleep(long time, t_philo *p);
 void	*ft_calloc(size_t count, size_t size);
 int		ft_atoi(const char *str);
 

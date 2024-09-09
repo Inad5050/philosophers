@@ -6,7 +6,7 @@
 /*   By: dangonz3 <dangonz3@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 14:11:29 by dani              #+#    #+#             */
-/*   Updated: 2024/09/09 16:58:29 by dangonz3         ###   ########.fr       */
+/*   Updated: 2024/09/09 17:53:34 by dangonz3         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,12 +20,17 @@ void	*checker(void *philosopher_struct)
 
 	phi = (t_phisolopher *)philosopher_struct;
 	p = phi->philo;
+
+	if (phi->index == 0)
+		printf("DEAD get_time - phi[%i]->last_meal) == result >= p->time_to_die %ld - %ld %ld  %ld\n", phi->index, get_time(p), \
+		phi->last_meal, get_time(p) - phi->last_meal, p->time_to_die);
+	
 	while (p->death == false && p->max_meals == false)
 	{
 		check_death(phi);
 		if (p->number_of_times_each_philosopher_must_eat)
 			check_max_meals(phi);
-		usleep(p->time_to_die);
+		usleep(p->time_to_die * (long)1000);
 	}
 	return (NULL);
 }
