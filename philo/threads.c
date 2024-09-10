@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   threads.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dangonz3 <dangonz3@student.42.fr>          +#+  +:+       +#+        */
+/*   By: dani <dani@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/01 09:02:17 by dani              #+#    #+#             */
-/*   Updated: 2024/09/09 21:02:35 by dangonz3         ###   ########.fr       */
+/*   Updated: 2024/09/10 12:22:35 by dani             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ void	*routine(void *philosopher_struct)
 	phi->last_meal = get_time(p);
 	if (pthread_create(&(phi->th_checker), NULL, &checker, phi))
 		ph_error("Failed to create thread", p);
-	while (p->death == false && p->max_meals == false)
+	while (p->death == false && p->max_meals < p->number_of_philosophers)
 	{
 		philo_eat(phi);
 		ph_print("is sleeping", phi->index, p);
@@ -78,10 +78,6 @@ void	philo_eat(t_phisolopher *phi)
 	ph_print("is eating", phi->index, phi->philo);
 	usleep(p->time_to_eat * (long)1000);
 	pthread_mutex_unlock(&(phi->checker_mutex));
-
-/* 	if (phi->index == 0)
-		printf("EAT phi->last_meal = %ld\n", phi->last_meal); */
-	
 	forks(phi, UNLOCK);
 }
 

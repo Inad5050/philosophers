@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dangonz3 <dangonz3@student.42.fr>          +#+  +:+       +#+        */
+/*   By: dani <dani@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/30 19:03:59 by dani              #+#    #+#             */
-/*   Updated: 2024/09/09 20:17:22 by dangonz3         ###   ########.fr       */
+/*   Updated: 2024/09/10 11:59:33 by dani             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ struct s_philo
 	pthread_mutex_t	write_mutex;
 	bool			write_mutex_initialized;
 	bool			death;
-	bool			max_meals;
+	int				max_meals;
 };
 
 //auxiliars
