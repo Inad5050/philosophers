@@ -6,7 +6,7 @@
 /*   By: dani <dani@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/01 09:02:17 by dani              #+#    #+#             */
-/*   Updated: 2024/09/10 14:52:47 by dani             ###   ########.fr       */
+/*   Updated: 2024/09/11 01:09:42 by dani             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ void	start_process(t_philo *p)
 	if (p->number_of_philosophers == 1)
 	{
 		one_philo(p);
-		return;
+		return ;
 	}
 	while (i < p->number_of_philosophers)
 	{
@@ -33,12 +33,12 @@ void	start_process(t_philo *p)
 		if (!pid)
 		{
 			routine(&(p->phi[i]));
-			break;
+			break ;
 		}
 		else
 			p->phi[i].pid = pid;
 		i++;
-	}	
+	}
 	end_process(p);
 }
 
@@ -69,12 +69,12 @@ void	philo_eat(t_phisolopher *phi)
 
 	p = phi->philo;
 	forks(phi, LOCK);
-	sem_wait(phi->checker_sem);	
+	sem_wait(phi->checker_sem);
 	phi->last_meal = get_time(phi->philo);
 	phi->times_eaten++;
 	ph_print("is eating", phi->index, phi->philo);
 	usleep(p->time_to_eat * (long)1000);
-	sem_post(phi->checker_sem);	
+	sem_post(phi->checker_sem);
 	forks(phi, UNLOCK);
 }
 
@@ -93,8 +93,8 @@ void	forks(t_phisolopher *phi, int i)
 	}
 	if (i == UNLOCK)
 	{
-		sem_post(p->forks_sem);	
-		sem_post(p->forks_sem);	
+		sem_post(p->forks_sem);
+		sem_post(p->forks_sem);
 	}
 }
 
@@ -118,5 +118,6 @@ void	end_process(t_philo *p)
 			}
 		}
 	}
-	while (wait(NULL) > 0);
+	while (wait(NULL) > 0)
+		continue ;
 }

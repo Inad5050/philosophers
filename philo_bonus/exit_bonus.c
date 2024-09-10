@@ -6,7 +6,7 @@
 /*   By: dani <dani@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/01 08:50:21 by dani              #+#    #+#             */
-/*   Updated: 2024/09/10 14:23:15 by dani             ###   ########.fr       */
+/*   Updated: 2024/09/11 01:11:44 by dani             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,5 +49,5 @@ void	free_memory(t_philo *p)
 void	close_semaphores(sem_t *sem, char *sem_name)
 {
 	sem_close(sem);
-	sem_unlink(sem_name);	
+	sem_unlink(sem_name);
 }

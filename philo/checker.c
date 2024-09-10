@@ -6,7 +6,7 @@
 /*   By: dani <dani@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 14:11:29 by dani              #+#    #+#             */
-/*   Updated: 2024/09/10 12:23:59 by dani             ###   ########.fr       */
+/*   Updated: 2024/09/11 01:02:56 by dani             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void	*checker(void *philosopher_struct)
 	t_philo			*p;
 
 	phi = (t_phisolopher *)philosopher_struct;
-	p = phi->philo;	
+	p = phi->philo;
 	while (p->death == false && p->max_meals < p->number_of_philosophers)
 	{
 		pthread_mutex_lock(&(phi->checker_mutex));
@@ -37,7 +37,7 @@ void	*checker(void *philosopher_struct)
 void	check_death(t_phisolopher *phi)
 {
 	t_philo	*p;
-		
+
 	p = phi->philo;
 	if ((get_time(p) - phi->last_meal) > p->time_to_die)
 	{
@@ -62,7 +62,7 @@ void	check_max_meals(t_phisolopher *phi)
 		if (p->max_meals == p->number_of_philosophers)
 		{
 			pthread_mutex_lock(&(p->write_mutex));
-				printf("%lu all philosophers are full\n", \
+			printf("%lu all philosophers are full\n", \
 				get_time(p) - p->initial_time);
 			pthread_mutex_unlock(&(p->write_mutex));
 		}

@@ -6,7 +6,7 @@
 /*   By: dani <dani@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/01 09:02:17 by dani              #+#    #+#             */
-/*   Updated: 2024/09/10 12:22:35 by dani             ###   ########.fr       */
+/*   Updated: 2024/09/11 01:02:26 by dani             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ void	start_threads(t_philo *p)
 			ph_error("Failed to create thread", p);
 		while (p->death == false)
 			usleep(0);
-		return;
+		return ;
 	}
 	i = 0;
 	while (i < p->number_of_philosophers)
