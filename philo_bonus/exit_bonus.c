@@ -6,7 +6,7 @@
 /*   By: dani <dani@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/01 08:50:21 by dani              #+#    #+#             */
-/*   Updated: 2024/09/09 00:28:12 by dani             ###   ########.fr       */
+/*   Updated: 2024/09/10 14:23:15 by dani             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,8 @@ void	free_memory(t_philo *p)
 		while (i < p->number_of_philosophers)
 		{
 			if (p->phi[i].checker_sem_created)
-				sem_unlink(p->phi[i].checker_sem_name);
+				close_semaphores(p->phi[i].checker_sem, \
+				p->phi[i].checker_sem_name);
 			if (p->phi[i].checker_sem_name)
 				free(p->phi[i].checker_sem_name);
 			i++;
@@ -38,9 +39,15 @@ void	free_memory(t_philo *p)
 		free(p->phi);
 	}
 	if (p->forks_sem_created)
-		sem_unlink("/forks_sem");
+		close_semaphores(p->forks_sem, "/forks_sem");
 	if (p->write_sem_created)
-		sem_unlink("/write_sem");
+		close_semaphores(p->write_sem, "/write_sem");
 	if (p)
 		free(p);
+}
+
+void	close_semaphores(sem_t *sem, char *sem_name)
+{
+	sem_close(sem);
+	sem_unlink(sem_name);	
 }

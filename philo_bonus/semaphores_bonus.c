@@ -6,7 +6,7 @@
 /*   By: dani <dani@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/10 01:06:24 by dani              #+#    #+#             */
-/*   Updated: 2024/09/10 02:34:57 by dani             ###   ########.fr       */
+/*   Updated: 2024/09/10 14:59:36 by dani             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,4 +62,28 @@ int	create_semaphore(char* str, int nmb, sem_t **sem, t_philo *p)
 			return (0);	
 	}
 	return (1);	
+}
+
+//special case for philos == 1
+void one_philo(t_philo *p)
+{
+	pid_t	pid;
+	
+	pid = fork();
+	if (pid < 0)
+		ph_error("Cannot fork()", p);
+	if (!pid)
+	{
+		p->phi[0].last_meal = get_time(p);
+		if (pthread_create(&(p->phi[0].th_checker), NULL, &checker, &(p->phi[0])))
+			ph_error("Failed to create thread", p);
+		sem_wait(p->forks_sem);
+		ph_print("has taken a fork", p->phi[0].index, p);
+		while (p->death == false)
+			usleep(0);
+		if (pthread_join(p->phi[0].th_checker, NULL))
+			ph_error("Failed to join thread", p);
+		exit(0);
+	}
+	wait(NULL);
 }

@@ -6,7 +6,7 @@
 /*   By: dani <dani@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/01 09:02:17 by dani              #+#    #+#             */
-/*   Updated: 2024/09/10 03:54:26 by dani             ###   ########.fr       */
+/*   Updated: 2024/09/10 14:52:47 by dani             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,11 @@ void	start_process(t_philo *p)
 
 	i = 0;
 	p->initial_time = get_time(p);
+	if (p->number_of_philosophers == 1)
+	{
+		one_philo(p);
+		return;
+	}
 	while (i < p->number_of_philosophers)
 	{
 		pid = fork();
@@ -55,11 +60,6 @@ void	routine(t_phisolopher *phi)
 	}
 	if (pthread_join(phi->th_checker, NULL))
 		ph_error("Failed to join thread", p);
-	sem_close(p->forks_sem);
-	sem_close(p->write_sem);
-	sem_close(phi->checker_sem);
-
-	printf("routine END2\n");
 }
 
 //feed philosophers
@@ -98,6 +98,7 @@ void	forks(t_phisolopher *phi, int i)
 	}
 }
 
+//if one philo is dead and there is no argc 6 kill the others
 void	end_process(t_philo *p)
 {
 	int		i;

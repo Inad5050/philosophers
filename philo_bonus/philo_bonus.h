@@ -6,7 +6,7 @@
 /*   By: dani <dani@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/30 19:03:59 by dani              #+#    #+#             */
-/*   Updated: 2024/09/10 03:36:07 by dani             ###   ########.fr       */
+/*   Updated: 2024/09/10 14:52:32 by dani             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,6 +78,7 @@ void	check_max_meals(t_phisolopher *phi);
 //exit
 void	ph_error(char *str, t_philo *p);
 void	free_memory(t_philo *p);
+void	close_semaphores(sem_t *sem, char *sem_name);
 
 //parsing
 int		parsing(t_philo	*p, int argc, char **argv);
@@ -88,6 +89,7 @@ int		initiate_args(t_philo *p, int argc, char **argv);
 int		initiate_semaphores(t_philo	*p);
 int		initiate_struct_phi(t_philo	*p);
 int		create_semaphore(char* str, int nmb, sem_t **sem, t_philo *p);
+void	one_philo(t_philo *p);
 
 //philo
 void	start_process(t_philo *p);
