@@ -6,7 +6,7 @@
 /*   By: dani <dani@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/01 09:02:17 by dani              #+#    #+#             */
-/*   Updated: 2024/09/09 01:03:53 by dani             ###   ########.fr       */
+/*   Updated: 2024/09/10 03:54:26 by dani             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@ void	start_process(t_philo *p)
 	pid_t	pid;
 
 	i = 0;
+	p->initial_time = get_time(p);
 	while (i < p->number_of_philosophers)
 	{
 		pid = fork();
@@ -29,13 +30,15 @@ void	start_process(t_philo *p)
 			routine(&(p->phi[i]));
 			break;
 		}
+		else
+			p->phi[i].pid = pid;
 		i++;
-	}
-	waitpid(-1, NULL, 0);
+	}	
+	end_process(p);
 }
 
 //start the checkers
-void	routine(t_phisolopher	*phi)
+void	routine(t_phisolopher *phi)
 {
 	t_philo	*p;
 
@@ -47,7 +50,7 @@ void	routine(t_phisolopher	*phi)
 	{
 		philo_eat(phi);
 		ph_print("is sleeping", phi->index, p);
-		ft_usleep(p->time_to_sleep, p);
+		usleep(p->time_to_sleep * (long)1000);
 		ph_print("is thinking", phi->index, p);
 	}
 	if (pthread_join(phi->th_checker, NULL))
@@ -55,8 +58,8 @@ void	routine(t_phisolopher	*phi)
 	sem_close(p->forks_sem);
 	sem_close(p->write_sem);
 	sem_close(phi->checker_sem);
-	
-	printf("ROUTINE termina index = %i\n", phi->index);	
+
+	printf("routine END2\n");
 }
 
 //feed philosophers
@@ -68,9 +71,9 @@ void	philo_eat(t_phisolopher *phi)
 	forks(phi, LOCK);
 	sem_wait(phi->checker_sem);	
 	phi->last_meal = get_time(phi->philo);
-	ph_print("is eating", phi->index, phi->philo);
-	ft_usleep(p->time_to_eat, p);
 	phi->times_eaten++;
+	ph_print("is eating", phi->index, phi->philo);
+	usleep(p->time_to_eat * (long)1000);
 	sem_post(phi->checker_sem);	
 	forks(phi, UNLOCK);
 }
@@ -93,4 +96,26 @@ void	forks(t_phisolopher *phi, int i)
 		sem_post(p->forks_sem);	
 		sem_post(p->forks_sem);	
 	}
+}
+
+void	end_process(t_philo *p)
+{
+	int		i;
+	pid_t	finished_pid;
+
+	if (!p->number_of_times_each_philosopher_must_eat)
+	{
+		finished_pid = waitpid(-1, NULL, 0);
+		i = 0;
+		if (finished_pid > 0)
+		{
+			while (i < p->number_of_philosophers)
+			{
+				if (p->phi[i].pid != finished_pid)
+					kill(p->phi[i].pid, SIGKILL);
+				i++;
+			}
+		}
+	}
+	while (wait(NULL) > 0);
 }

@@ -6,7 +6,7 @@
 /*   By: dani <dani@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 14:11:29 by dani              #+#    #+#             */
-/*   Updated: 2024/09/09 00:58:02 by dani             ###   ########.fr       */
+/*   Updated: 2024/09/10 03:57:24 by dani             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,10 +27,12 @@ void	*checker(void *philosopher_struct)
 		if (p->number_of_times_each_philosopher_must_eat)
 			check_max_meals(phi);
 		sem_post(phi->checker_sem);
+		if (p->death == false && p->max_meals == false)
+			usleep((20 * (long)1000));
 	}
-
-	printf("CHECKER termina index = %i\n", phi->index);
 	
+	printf("checker END\n");
+
 	return (NULL);
 }
 
@@ -59,14 +61,8 @@ void	check_max_meals(t_phisolopher *phi)
 
 	p = phi->philo;
 	i = 0;
-	while (i < p->number_of_philosophers)
-	{
-		if (p->phi[i].times_eaten < \
-		p->number_of_times_each_philosopher_must_eat)
-			break ;
-		i++;
-	}
-	if (i == p->number_of_philosophers)
+	if (p->phi[i].times_eaten < \
+	p->number_of_times_each_philosopher_must_eat)
 	{
 		sem_wait(p->write_sem);
 		if (p->max_meals == false)

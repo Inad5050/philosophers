@@ -6,7 +6,7 @@
 #    By: dani <dani@student.42.fr>                  +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/08/30 19:01:54 by dani              #+#    #+#              #
-#    Updated: 2024/09/09 00:04:00 by dani             ###   ########.fr        #
+#    Updated: 2024/09/10 01:12:08 by dani             ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,7 +20,7 @@ COLOR_RESET = \033[0m
 
 #sources
 SRC_BONUS_DIR = ./
-SRC_BONUS_FILES = auxiliars_bonus.c checker_bonus.c exit_bonus.c libft_bonus.c main_bonus.c parsing_bonus.c threads_bonus.c
+SRC_BONUS_FILES = auxiliars_bonus.c checker_bonus.c exit_bonus.c main_bonus.c parsing_bonus.c semaphores_bonus.c threads_bonus.c
 SRC_BONUS = $(addprefix $(SRC_BONUS_DIR), $(SRC_BONUS_FILES))
 OBJ_BONUS = $(SRC_BONUS:.c=.o)
 

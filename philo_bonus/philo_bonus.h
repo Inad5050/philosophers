@@ -6,7 +6,7 @@
 /*   By: dani <dani@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/30 19:03:59 by dani              #+#    #+#             */
-/*   Updated: 2024/09/09 01:43:46 by dani             ###   ########.fr       */
+/*   Updated: 2024/09/10 03:36:07 by dani             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,8 @@
 # include <semaphore.h>
 # include <fcntl.h>
 # include <sys/stat.h>
+# include <errno.h>
+# include <signal.h>
 
 # define LOCK   1
 # define UNLOCK 0
@@ -40,6 +42,7 @@ typedef struct s_philosopher
 	char			*checker_sem_name;
 	sem_t			*checker_sem;
 	bool			checker_sem_created;
+	pid_t			pid;
 	t_philo			*philo;
 }		t_phisolopher;
 
@@ -58,13 +61,14 @@ struct s_philo
 	bool			write_sem_created;
 	bool			death;
 	bool			max_meals;
-	bool			sem_already_created;
 };
 
 //auxiliars
 long	get_time(t_philo *p);
 void	ph_print(char *str, int i, t_philo *p);
-void	ft_usleep(long time, t_philo *p);
+void	*ft_calloc(size_t count, size_t size);
+int		ft_atoi(const char *str);
+char	*ph_strjoin(char *s1, char c);
 
 //checker
 void	*checker(void *philosopher_struct);
@@ -75,23 +79,22 @@ void	check_max_meals(t_phisolopher *phi);
 void	ph_error(char *str, t_philo *p);
 void	free_memory(t_philo *p);
 
-//libft
-void	*ft_calloc(size_t count, size_t size);
-int		ft_atoi(const char *str);
-char	*ph_strjoin(char *s1, char c);
-
 //parsing
 int		parsing(t_philo	*p, int argc, char **argv);
 int		check_args(t_philo *p, char **argv);
 int		initiate_args(t_philo *p, int argc, char **argv);
+
+//semaphores
+int		initiate_semaphores(t_philo	*p);
 int		initiate_struct_phi(t_philo	*p);
-int		initiate_sems(t_philo *p);
+int		create_semaphore(char* str, int nmb, sem_t **sem, t_philo *p);
 
 //philo
 void	start_process(t_philo *p);
 void	routine(t_phisolopher *phi);
 void	forks(t_phisolopher *phi, int i);
 void	philo_eat(t_phisolopher *phi);
+void	end_process(t_philo *p);
 
 #endif
 
