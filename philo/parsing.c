@@ -6,7 +6,7 @@
 /*   By: dangonz3 <dangonz3@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/01 09:00:38 by dani              #+#    #+#             */
-/*   Updated: 2024/09/09 17:07:09 by dangonz3         ###   ########.fr       */
+/*   Updated: 2024/09/11 19:19:56 by dangonz3         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,9 @@ int	parsing(t_philo	*p, int argc, char **argv)
 	if (pthread_mutex_init(&(p->write_mutex), NULL))
 		return (ph_error("Cannot initiate write_mutex\n", p), 0);
 	p->write_mutex_initialized = true;
+	if (pthread_mutex_init(&(p->end_condition_mutex), NULL))
+		return (ph_error("Cannot initiate write_mutex\n", p), 0);
+	p->end_condition_mutex_initialized = true;
 	return (1);
 }
 

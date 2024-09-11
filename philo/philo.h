@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dani <dani@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: dangonz3 <dangonz3@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/30 19:03:59 by dani              #+#    #+#             */
-/*   Updated: 2024/09/10 11:59:33 by dani             ###   ########.fr       */
+/*   Updated: 2024/09/11 21:09:10 by dangonz3         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,13 +50,17 @@ struct s_philo
 	pthread_mutex_t	*forks;
 	pthread_mutex_t	write_mutex;
 	bool			write_mutex_initialized;
+	pthread_mutex_t	end_condition_mutex;
+	bool			end_condition_mutex_initialized;
 	bool			death;
+	bool			full;
 	int				max_meals;
 };
 
 //auxiliars
 long	get_time(t_philo *p);
 void	ph_print(char *str, int i, t_philo *p);
+void	ft_usleep(long time, t_philo *p);
 void	*ft_calloc(size_t count, size_t size);
 int		ft_atoi(const char *str);
 
@@ -68,6 +72,9 @@ void	check_max_meals(t_phisolopher *phi);
 //exit
 void	ph_error(char *str, t_philo *p);
 void	free_memory(t_philo *p);
+
+//others
+void	*one_philo(void *philosopher_struct);
 
 //parsing
 int		parsing(t_philo	*p, int argc, char **argv);
@@ -81,7 +88,7 @@ void	start_threads(t_philo *p);
 void	*routine(void *philosopher_struct);
 void	philo_eat(t_phisolopher *phi);
 void	forks(t_phisolopher *phi, int i);
-void	*one_philo(void *philosopher_struct);
+void	end_threads(t_philo *p);
 
 #endif
 
