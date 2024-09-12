@@ -3,62 +3,72 @@
 /*                                                        :::      ::::::::   */
 /*   checker_bonus.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dani <dani@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: dangonz3 <dangonz3@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 14:11:29 by dani              #+#    #+#             */
-/*   Updated: 2024/09/10 14:58:11 by dani             ###   ########.fr       */
+/*   Updated: 2024/09/12 20:47:22 by dangonz3         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo_bonus.h"
 
-//check if threads should stop
-void	*checker(void *philosopher_struct)
+void	*checker_routine(void *phi_struct)
 {
 	t_phisolopher	*phi;
 	t_philo			*p;
 
-	phi = (t_phisolopher *)philosopher_struct;
+	phi = (t_phisolopher *)phi_struct;
 	p = phi->philo;
-	while (p->death == false && p->max_meals == false)
+	while (check_end_condition(phi))
 	{
-		sem_wait(phi->checker_sem);
 		check_death(phi);
 		if (p->number_of_times_each_philosopher_must_eat)
 			check_max_meals(phi);
-		sem_post(phi->checker_sem);
-		if (p->death == false && p->max_meals == false)
-			usleep((8 * (long)1000));
+		if (check_end_condition(phi))
+			ph_usleep(5, p);
 	}
-	return (NULL);
+	return (phi_struct);
 }
 
-//check if a philosopher has died
 void	check_death(t_phisolopher *phi)
 {
 	t_philo	*p;
 
 	p = phi->philo;
+	sem_wait(phi->eat_sem);
 	if ((get_time(p) - phi->last_meal) >= p->time_to_die)
 	{
-		sem_wait(p->write_sem);
-		if (p->death == false)
-			printf("%lu %i has died\n", get_time(p) - \
-			p->initial_time, phi->index);
-		p->death = true;
-		sem_post(p->write_sem);
+		sem_wait(phi->end_sem);
+		phi->end_condition = true;
+		sem_post(phi->end_sem);
+		ph_print("died", phi);
 	}
+	sem_post(phi->eat_sem);
 }
 
-//check if all philosophers are full
 void	check_max_meals(t_phisolopher *phi)
 {
 	t_philo	*p;
 
 	p = phi->philo;
+	sem_wait(phi->eat_sem);
 	if (phi->times_eaten == p->number_of_times_each_philosopher_must_eat)
 	{
-		ph_print("is full", phi->index, p);
-		p->max_meals = true;
+		sem_wait(phi->end_sem);
+		phi->end_condition = true;
+		sem_post(phi->end_sem);
 	}
+	sem_post(phi->eat_sem);
+}
+
+int	check_end_condition(t_phisolopher *phi)
+{
+	sem_wait(phi->end_sem);
+	if (phi->end_condition == true)
+	{
+		sem_post(phi->end_sem);
+		return (0);		
+	}
+	sem_post(phi->end_sem);
+	return (1);
 }

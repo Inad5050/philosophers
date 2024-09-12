@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   auxiliars_bonus.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dani <dani@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: dangonz3 <dangonz3@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 18:36:42 by dani              #+#    #+#             */
-/*   Updated: 2024/09/11 01:03:10 by dani             ###   ########.fr       */
+/*   Updated: 2024/09/12 19:21:32 by dangonz3         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,71 +21,24 @@ long	get_time(t_philo *p)
 	return ((tv.tv_sec * (long)1000) + (tv.tv_usec / 1000));
 }
 
-void	ph_print(char *str, int i, t_philo *p)
+void	ph_print(char *str, t_phisolopher *phi)
 {
+	t_philo	*p;
+
+	p = phi->philo;
 	sem_wait(p->write_sem);
-	if (p->death == false && p->max_meals == false)
-		printf("%lu %i %s\n", get_time(p) - p->initial_time, i + 1, str);
+	if (!ft_strncmp(str, "died", 5))
+		printf("%lu %i %s\n", get_time(p) - p->initial_time, phi->index, str);
+	if (check_end_condition(phi))
+		printf("%lu %i %s\n", get_time(p) - p->initial_time, phi->index, str);
 	sem_post(p->write_sem);
 }
 
-void	*ft_calloc(size_t count, size_t size)
+void	ph_usleep(long time, t_philo *p)
 {
-	void	*str;
-	size_t	i;
+	long	start;
 
-	i = 0;
-	str = malloc(count * size);
-	if (!str)
-		return (NULL);
-	while (i < count * size)
-		((unsigned char *)str)[i++] = 0;
-	return (str);
-}
-
-int	ft_atoi(const char *str)
-{
-	int	a;
-	int	b;
-
-	a = 1;
-	b = 0;
-	while (*str == ' ' || *str == '\t' || *str == '\n'
-		|| *str == '\v' || *str == '\f' || *str == '\r')
-		str++;
-	if (*str == '-' || *str == '+')
-	{
-		if (*str == '-')
-			a *= -1;
-		str++;
-	}
-	while ('0' <= *str && *str <= '9')
-	{
-		b = 10 * b + (*str - '0');
-		str++;
-	}
-	return (b * a);
-}
-
-char	*ph_strjoin(char *s1, char c)
-{
-	int		i;
-	char	*result;
-
-	i = 0;
-	while (s1[i])
-		i++;
-	result = ft_calloc(i + 1 + 1, sizeof(char));
-	if (result == NULL)
-		return (NULL);
-	i = 0;
-	while (s1[i])
-	{
-		result[i] = s1[i];
-		i++;
-	}
-	result[i] = c;
-	i++;
-	result[i] = '\0';
-	return (result);
+	start = get_time(p);
+	while ((get_time(p) - start) < time)
+		usleep(time / 10);
 }

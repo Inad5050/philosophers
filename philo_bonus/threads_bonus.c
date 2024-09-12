@@ -3,16 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   threads_bonus.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dani <dani@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: dangonz3 <dangonz3@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/01 09:02:17 by dani              #+#    #+#             */
-/*   Updated: 2024/09/11 01:09:42 by dani             ###   ########.fr       */
+/*   Updated: 2024/09/12 20:41:59 by dangonz3         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo_bonus.h"
 
-//start the process and wait for all of them
 void	start_process(t_philo *p)
 {
 	int		i;
@@ -42,43 +41,44 @@ void	start_process(t_philo *p)
 	end_process(p);
 }
 
-//start the checkers
 void	routine(t_phisolopher *phi)
 {
 	t_philo	*p;
 
 	p = phi->philo;
 	phi->last_meal = get_time(p);
-	if (pthread_create(&(phi->th_checker), NULL, &checker, phi))
+	if (pthread_create(&(phi->th_checker), NULL, &checker_routine, phi))
 		ph_error("Failed to create thread", p);
-	while (p->death == false && p->max_meals == false)
+	if (phi->index % 2 != 0)
+		ph_usleep(10, p);
+	while (check_end_condition(phi))
 	{
 		philo_eat(phi);
-		ph_print("is sleeping", phi->index, p);
-		usleep(p->time_to_sleep * (long)1000);
-		ph_print("is thinking", phi->index, p);
+		ph_print("is sleeping", phi);
+		ph_usleep(p->time_to_sleep, p);
+		ph_print("is thinking", phi);
 	}
 	if (pthread_join(phi->th_checker, NULL))
 		ph_error("Failed to join thread", p);
 }
 
-//feed philosophers
 void	philo_eat(t_phisolopher *phi)
 {
 	t_philo	*p;
 
 	p = phi->philo;
 	forks(phi, LOCK);
-	sem_wait(phi->checker_sem);
+	ph_print("is eating", phi);
+	phi->eating = true;
+	sem_wait(phi->eat_sem);
 	phi->last_meal = get_time(phi->philo);
 	phi->times_eaten++;
-	ph_print("is eating", phi->index, phi->philo);
-	usleep(p->time_to_eat * (long)1000);
-	sem_post(phi->checker_sem);
+	sem_post(phi->eat_sem);
+	ph_usleep(p->time_to_eat, p);
+	phi->eating = false;
 	forks(phi, UNLOCK);
 }
 
-//take the forks
 void	forks(t_phisolopher *phi, int i)
 {
 	t_philo	*p;
@@ -87,9 +87,9 @@ void	forks(t_phisolopher *phi, int i)
 	if (i == LOCK)
 	{
 		sem_wait(p->forks_sem);
-		ph_print("has taken a fork", phi->index, p);
+		ph_print("has taken a fork", phi);
 		sem_wait(p->forks_sem);
-		ph_print("has taken a fork", phi->index, p);
+		ph_print("has taken a fork", phi);
 	}
 	if (i == UNLOCK)
 	{
@@ -98,7 +98,6 @@ void	forks(t_phisolopher *phi, int i)
 	}
 }
 
-//if one philo is dead and there is no argc 6 kill the others
 void	end_process(t_philo *p)
 {
 	int		i;

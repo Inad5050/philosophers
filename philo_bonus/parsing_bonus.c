@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing_bonus.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dani <dani@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: dangonz3 <dangonz3@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/01 09:00:38 by dani              #+#    #+#             */
-/*   Updated: 2024/09/10 01:05:18 by dani             ###   ########.fr       */
+/*   Updated: 2024/09/12 20:07:13 by dangonz3         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,6 @@ int	parsing(t_philo	*p, int argc, char **argv)
 	return (1);
 }
 
-//check if args are positive numbers
 int	check_args(t_philo	*p, char **argv)
 {
 	int	i;
@@ -42,7 +41,6 @@ int	check_args(t_philo	*p, char **argv)
 	return (1);
 }
 
-//fill struct philo
 int	initiate_args(t_philo *p, int argc, char **argv)
 {
 	p->number_of_philosophers = ft_atoi(argv[1]);
