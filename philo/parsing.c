@@ -6,7 +6,7 @@
 /*   By: dangonz3 <dangonz3@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/01 09:00:38 by dani              #+#    #+#             */
-/*   Updated: 2024/09/12 15:05:06 by dangonz3         ###   ########.fr       */
+/*   Updated: 2024/09/12 17:04:39 by dangonz3         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,6 @@ int	parsing(t_philo	*p, int argc, char **argv)
 		return (0);
 	if (!initiate_args(p, argc, argv))
 		return (0);
-	p->initial_time = get_time(p);
 	if (!initiate_struct_phi(p))
 		return (0);
 	if (!initiate_forks(p))
@@ -32,6 +31,7 @@ int	parsing(t_philo	*p, int argc, char **argv)
 	if (pthread_mutex_init(&(p->end_condition_mutex), NULL))
 		return (ph_error("Cannot initiate write_mutex\n", p), 0);
 	p->end_condition_mutex_initialized = true;
+	p->initial_time = get_time(p);
 	return (1);
 }
 
@@ -84,6 +84,8 @@ int	initiate_struct_phi(t_philo	*p)
 	{
 		p->phi[i].index = i;
 		p->phi[i].philo = p;
+		p->phi[i].last_meal = get_time(p);
+		i++;
 	}
 	return (1);
 }

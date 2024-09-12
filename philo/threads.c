@@ -6,7 +6,7 @@
 /*   By: dangonz3 <dangonz3@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 14:49:10 by dangonz3          #+#    #+#             */
-/*   Updated: 2024/09/12 15:30:14 by dangonz3         ###   ########.fr       */
+/*   Updated: 2024/09/12 17:07:09 by dangonz3         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ void	start_threads(t_philo *p)
 {
 	int	i;
 
-	if (pthread_create(&(p->checker_th), NULL, &checker_routine, &p) != 0)
+	if (pthread_create(&(p->checker_th), NULL, &checker_routine, p) != 0)
 		ph_error("Failed to create watcher thread", p);
 	if (p->number_of_philosophers == 1)
 	{
@@ -48,7 +48,6 @@ void	*philo_routine(void *phi_struct)
 
 	phi = (t_phisolopher *)phi_struct;
 	p = phi->philo;
-	phi->last_meal = get_time(p);
 	while (check_end_condition(phi))
 	{
 		philo_eat(phi);

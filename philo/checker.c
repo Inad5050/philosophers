@@ -6,7 +6,7 @@
 /*   By: dangonz3 <dangonz3@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 14:52:23 by dangonz3          #+#    #+#             */
-/*   Updated: 2024/09/12 15:28:20 by dangonz3         ###   ########.fr       */
+/*   Updated: 2024/09/12 17:06:43 by dangonz3         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,17 +33,17 @@ int	check_death(t_philo *p)
 	i = 0;
 	while (i < p->number_of_philosophers)
 	{
-		pthread_mutex_lock(&p->eat_mutex);
+		pthread_mutex_lock(&(p->eat_mutex));				
 		if (get_time(p) - p->phi[i].last_meal >= p->time_to_die \
 		&& p->phi[i].eating == false)
 		{
 			activate_end_condition(p);
 			ph_print("died", i, p);
-			pthread_mutex_unlock(&p->eat_mutex);
+			pthread_mutex_unlock(&(p->eat_mutex));
 			return (0);
 		}
 		i++;
-		pthread_mutex_unlock(&p->eat_mutex);
+		pthread_mutex_unlock(&(p->eat_mutex));
 	}
 	return (1);
 }
