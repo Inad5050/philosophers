@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   threads.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dangonz3 <dangonz3@student.42.fr>          +#+  +:+       +#+        */
+/*   By: dani <dani@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/01 09:02:17 by dani              #+#    #+#             */
-/*   Updated: 2024/09/11 21:19:51 by dangonz3         ###   ########.fr       */
+/*   Updated: 2024/09/12 04:06:23 by dani             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,15 +25,29 @@ void	start_threads(t_philo *p)
 			ft_usleep(0, p);
 		return ;
 	}
-	i = 0;
-	while (i < p->number_of_philosophers)
+	i = -1;
+	while (++i < p->number_of_philosophers)
 	{
 		if (pthread_create(&(p->phi[i].th), NULL, &routine, &(p->phi[i])))
 			ph_error("Failed to create thread", p);
 		ft_usleep(1, p);
-		i++;
 	}
-	end_threads(p);
+	if (p->number_of_times_each_philosopher_must_eat)
+		check_global_max_meals(p);
+	i = 0;
+	
+	while (i < p->number_of_philosophers)
+	{
+		/* pthread_mutex_lock(&(p->end_condition_mutex)); */
+		if (pthread_join(p->phi[i].th, NULL))
+			ph_error("Failed to join thread", p);
+
+		printf("JOIN %i termina\n", i);
+		
+		i++;
+		/* pthread_mutex_unlock(&(p->end_condition_mutex)); */
+	}
+	
 }
 
 //start the checkers
@@ -48,14 +62,19 @@ void	*routine(void *philosopher_struct)
 	if (pthread_create(&(phi->th_checker), NULL, &checker, phi))
 		ph_error("Failed to create thread", p);
 	while (p->death == false && p->full == false)
-	{
+	{		
 		philo_eat(phi);
 		ph_print("is sleeping", phi->index, p);
 		ft_usleep(p->time_to_sleep, p);
 		ph_print("is thinking", phi->index, p);
 	}
+	pthread_mutex_lock(&(p->join_mutex));
 	if (pthread_join(phi->th_checker, NULL))
 		ph_error("Failed to join thread", p);
+	pthread_mutex_unlock(&(p->join_mutex));
+
+	printf("ROUTINE %i termina\n", phi->index);
+		
 	return (NULL);
 }
 
@@ -68,8 +87,8 @@ void	philo_eat(t_phisolopher *phi)
 	forks(phi, LOCK);
 	pthread_mutex_lock(&(phi->checker_mutex));
 	phi->last_meal = get_time(phi->philo);
-	phi->times_eaten++;
-	ph_print("is eating", phi->index, phi->philo);
+	phi->times_eaten++;	
+	ph_print("is eating", phi->index, phi->philo);	
 	ft_usleep(p->time_to_eat, p);
 	pthread_mutex_unlock(&(phi->checker_mutex));
 	forks(phi, UNLOCK);
@@ -100,33 +119,34 @@ void	forks(t_phisolopher *phi, int i)
 	}
 }
 
-void	end_threads(t_philo *p)
+void	check_global_max_meals(t_philo *p)
 {
 	int	i;
 
-	if (p->number_of_times_each_philosopher_must_eat)
+	i = 0;
+	while (p->death == false && p->full == false)
 	{
-		while (p->death == false && p->full == false)
+		while (i < p->number_of_philosophers && p->max_meals < \
+		p->number_of_philosophers)
 		{
 			pthread_mutex_lock(&(p->end_condition_mutex));
-			if (p->max_meals == p->number_of_philosophers)
-			{
-				pthread_mutex_lock(&(p->write_mutex));
-				p->full = true;
-				printf("%lu all philosophers are full\n", \
-					get_time(p) - p->initial_time);
-				pthread_mutex_unlock(&(p->write_mutex));
-			}
+			if (p->phi[i].max_meals == true)
+				p->max_meals++;
 			pthread_mutex_unlock(&(p->end_condition_mutex));
-			if ((p->death == false && p->full == false))
-				ft_usleep(5, p);
+			i++;
 		}
-	}
-	i = 0;
-	while (i < p->number_of_philosophers)
-	{
-		if (pthread_join(p->phi[i].th, NULL))
-			ph_error("Failed to join thread", p);
-		i++;
+		if (p->max_meals == p->number_of_philosophers)
+		{
+			pthread_mutex_lock(&(p->write_mutex));
+			p->full = true;
+			printf("All philosophers are full\n");
+			pthread_mutex_unlock(&(p->write_mutex));
+
+			printf("CONDICION END p->full = true\n");
+			
+		}
+		if ((p->death == false && p->full == false))
+			ft_usleep(5, p);
+		i = 0;
 	}
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exit.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dangonz3 <dangonz3@student.42.fr>          +#+  +:+       +#+        */
+/*   By: dani <dani@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/01 08:50:21 by dani              #+#    #+#             */
-/*   Updated: 2024/09/11 21:02:07 by dangonz3         ###   ########.fr       */
+/*   Updated: 2024/09/12 04:04:48 by dani             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,8 @@ void	free_memory(t_philo *p)
 		pthread_mutex_destroy(&(p->write_mutex));
 	if (p->end_condition_mutex_initialized)
 		pthread_mutex_destroy(&(p->end_condition_mutex));
+	if (p->join_mutex_initialized)
+		pthread_mutex_destroy(&(p->join_mutex));
 	if (p)
 		free(p);
 }
