@@ -6,7 +6,7 @@
 /*   By: dangonz3 <dangonz3@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 14:49:10 by dangonz3          #+#    #+#             */
-/*   Updated: 2024/09/12 18:19:27 by dangonz3         ###   ########.fr       */
+/*   Updated: 2024/09/12 20:32:50 by dangonz3         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,10 +64,10 @@ void	philo_eat(t_phisolopher *phi)
 
 	p = phi->philo;
 	forks(phi, LOCK);
-	ph_print("is eating", phi->index, phi->philo);
+	ph_print("is eating", phi->index, p);
 	phi->eating = true;
 	pthread_mutex_lock(&(p->eat_mutex));
-	phi->last_meal = get_time(phi->philo);
+	phi->last_meal = get_time(p);
 	phi->times_eaten++;
 	pthread_mutex_unlock(&(p->eat_mutex));
 	ph_usleep(p->time_to_eat, p);

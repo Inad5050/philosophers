@@ -6,7 +6,7 @@
 /*   By: dangonz3 <dangonz3@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 18:36:42 by dani              #+#    #+#             */
-/*   Updated: 2024/09/12 15:30:53 by dangonz3         ###   ########.fr       */
+/*   Updated: 2024/09/12 19:18:18 by dangonz3         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ long	get_time(t_philo *p)
 void	ph_print(char *str, int i, t_philo *p)
 {
 	pthread_mutex_lock(&(p->write_mutex));
-	if (ft_strncmp(str, "died", 5))
+	if (!ft_strncmp(str, "died", 5))
 		printf("%lu %i %s\n", get_time(p) - p->initial_time, i + 1, str);
 	if (check_end_condition(&(p->phi[i])))
 		printf("%lu %i %s\n", get_time(p) - p->initial_time, i + 1, str);
