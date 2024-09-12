@@ -3,98 +3,79 @@
 /*                                                        :::      ::::::::   */
 /*   threads.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dani <dani@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: dangonz3 <dangonz3@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/01 09:02:17 by dani              #+#    #+#             */
-/*   Updated: 2024/09/12 04:06:23 by dani             ###   ########.fr       */
+/*   Created: 2024/09/12 14:49:10 by dangonz3          #+#    #+#             */
+/*   Updated: 2024/09/12 15:30:14 by dangonz3         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-//start the philosophers and wait for them to finish
 void	start_threads(t_philo *p)
 {
 	int	i;
 
+	if (pthread_create(&(p->checker_th), NULL, &checker_routine, &p) != 0)
+		ph_error("Failed to create watcher thread", p);
 	if (p->number_of_philosophers == 1)
 	{
 		if (pthread_create(&(p->phi[0].th), NULL, &one_philo, &(p->phi[0])))
 			ph_error("Failed to create thread", p);
-		while (p->death == false)
-			ft_usleep(0, p);
 		return ;
 	}
 	i = -1;
 	while (++i < p->number_of_philosophers)
 	{
-		if (pthread_create(&(p->phi[i].th), NULL, &routine, &(p->phi[i])))
+		if (pthread_create(&(p->phi[i].th), NULL, &philo_routine, &(p->phi[i])))
 			ph_error("Failed to create thread", p);
-		ft_usleep(1, p);
+		ph_usleep(1, p);
 	}
-	if (p->number_of_times_each_philosopher_must_eat)
-		check_global_max_meals(p);
-	i = 0;
-	
-	while (i < p->number_of_philosophers)
+	if (pthread_join(p->checker_th, NULL))
+		ph_error("Failed to join thread", p);
+	i = -1;
+	while (++i < p->number_of_philosophers)
 	{
-		/* pthread_mutex_lock(&(p->end_condition_mutex)); */
 		if (pthread_join(p->phi[i].th, NULL))
-			ph_error("Failed to join thread", p);
-
-		printf("JOIN %i termina\n", i);
-		
-		i++;
-		/* pthread_mutex_unlock(&(p->end_condition_mutex)); */
+			ph_error("Failed to join thread", p);		
 	}
-	
 }
 
-//start the checkers
-void	*routine(void *philosopher_struct)
+void	*philo_routine(void *phi_struct)
 {
 	t_phisolopher	*phi;
 	t_philo			*p;
 
-	phi = (t_phisolopher *)philosopher_struct;
+	phi = (t_phisolopher *)phi_struct;
 	p = phi->philo;
 	phi->last_meal = get_time(p);
-	if (pthread_create(&(phi->th_checker), NULL, &checker, phi))
-		ph_error("Failed to create thread", p);
-	while (p->death == false && p->full == false)
-	{		
+	while (check_end_condition(phi))
+	{
 		philo_eat(phi);
 		ph_print("is sleeping", phi->index, p);
-		ft_usleep(p->time_to_sleep, p);
+		ph_usleep(p->time_to_sleep, p);
 		ph_print("is thinking", phi->index, p);
 	}
-	pthread_mutex_lock(&(p->join_mutex));
-	if (pthread_join(phi->th_checker, NULL))
-		ph_error("Failed to join thread", p);
-	pthread_mutex_unlock(&(p->join_mutex));
-
-	printf("ROUTINE %i termina\n", phi->index);
-		
-	return (NULL);
+	return (phi_struct);
 }
 
-//feed philosophers
 void	philo_eat(t_phisolopher *phi)
 {
 	t_philo	*p;
 
 	p = phi->philo;
 	forks(phi, LOCK);
-	pthread_mutex_lock(&(phi->checker_mutex));
-	phi->last_meal = get_time(phi->philo);
-	phi->times_eaten++;	
 	ph_print("is eating", phi->index, phi->philo);	
-	ft_usleep(p->time_to_eat, p);
-	pthread_mutex_unlock(&(phi->checker_mutex));
+	phi->eating = true;
+	pthread_mutex_lock(&(p->eat_mutex));
+	phi->last_meal = get_time(phi->philo);
+	phi->times_eaten++;
+	pthread_mutex_unlock(&(p->eat_mutex));
+	ph_usleep(p->time_to_eat, p);
+	phi->eating = false;
 	forks(phi, UNLOCK);
 }
 
-//take the forks
 void	forks(t_phisolopher *phi, int i)
 {
 	t_philo	*p;
@@ -119,34 +100,17 @@ void	forks(t_phisolopher *phi, int i)
 	}
 }
 
-void	check_global_max_meals(t_philo *p)
+int	check_end_condition(t_phisolopher *phi)
 {
-	int	i;
-
-	i = 0;
-	while (p->death == false && p->full == false)
+	t_philo	*p;
+	
+	p = phi->philo;
+	pthread_mutex_lock(&(p->end_condition_mutex));
+	if (phi->end_condition == true)
 	{
-		while (i < p->number_of_philosophers && p->max_meals < \
-		p->number_of_philosophers)
-		{
-			pthread_mutex_lock(&(p->end_condition_mutex));
-			if (p->phi[i].max_meals == true)
-				p->max_meals++;
-			pthread_mutex_unlock(&(p->end_condition_mutex));
-			i++;
-		}
-		if (p->max_meals == p->number_of_philosophers)
-		{
-			pthread_mutex_lock(&(p->write_mutex));
-			p->full = true;
-			printf("All philosophers are full\n");
-			pthread_mutex_unlock(&(p->write_mutex));
-
-			printf("CONDICION END p->full = true\n");
-			
-		}
-		if ((p->death == false && p->full == false))
-			ft_usleep(5, p);
-		i = 0;
+		pthread_mutex_unlock(&(p->end_condition_mutex));
+		return (0);
 	}
+	pthread_mutex_unlock(&(p->end_condition_mutex));
+	return (1);
 }

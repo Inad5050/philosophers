@@ -3,64 +3,86 @@
 /*                                                        :::      ::::::::   */
 /*   checker.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dani <dani@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: dangonz3 <dangonz3@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/04 14:11:29 by dani              #+#    #+#             */
-/*   Updated: 2024/09/12 03:57:21 by dani             ###   ########.fr       */
+/*   Created: 2024/09/12 14:52:23 by dangonz3          #+#    #+#             */
+/*   Updated: 2024/09/12 15:28:20 by dangonz3         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-//check if threads should stop
-void	*checker(void *philosopher_struct)
-{
-	t_phisolopher	*phi;
-	t_philo			*p;
-
-	phi = (t_phisolopher *)philosopher_struct;
-	p = phi->philo;
-	while (p->death == false && p->full == false)
-	{
-		pthread_mutex_lock(&(phi->checker_mutex));
-		check_death(phi);
-		if (p->number_of_times_each_philosopher_must_eat)
-			check_phi_max_meals(phi);
-		pthread_mutex_unlock(&(phi->checker_mutex));
-		if (p->death == false && phi->max_meals == false)
-			ft_usleep(5, p);
-	}
-
-	printf("CHECKER %i termina\n", phi->index);
-	
-	return (NULL);
-}
-
-//check if a philosopher has died
-void	check_death(t_phisolopher *phi)
+void	*checker_routine(void *p_struct)
 {
 	t_philo	*p;
 
-	p = phi->philo;
-	if ((get_time(p) - phi->last_meal) > p->time_to_die)
+	p = (t_philo *)p_struct;
+	ph_usleep(2, p);
+	while (1)
 	{
-		pthread_mutex_lock(&(p->write_mutex));
-		if (p->death == false)
-			printf("%lu %i has died\n", get_time(p) - \
-			p->initial_time, phi->index + 1);
-		p->death = true;
-		pthread_mutex_unlock(&(p->write_mutex));
+		if (!check_death(p) || !check_max_meals(p))
+			break ;
 	}
+	return (p_struct);
 }
 
-//check if all philosophers are full
-void	check_phi_max_meals(t_phisolopher *phi)
+int	check_death(t_philo *p)
 {
-	t_philo	*p;
+	int	i;
 
-	p = phi->philo;
-	pthread_mutex_lock(&(p->end_condition_mutex));
-	if (phi->times_eaten == p->number_of_times_each_philosopher_must_eat)
-		phi->max_meals = true;
-	pthread_mutex_unlock(&(p->end_condition_mutex));
+	i = 0;
+	while (i < p->number_of_philosophers)
+	{
+		pthread_mutex_lock(&p->eat_mutex);
+		if (get_time(p) - p->phi[i].last_meal >= p->time_to_die \
+		&& p->phi[i].eating == false)
+		{
+			activate_end_condition(p);
+			ph_print("died", i, p);
+			pthread_mutex_unlock(&p->eat_mutex);
+			return (0);
+		}
+		i++;
+		pthread_mutex_unlock(&p->eat_mutex);
+	}
+	return (1);
+}
+
+int	check_max_meals(t_philo *p)
+{
+	int	i;
+    int max_meals;
+    
+	i = 0;
+	max_meals = 0;
+	if (!p->number_of_times_each_philosopher_must_eat)
+		return (1);
+	while (i < p->number_of_philosophers)
+	{
+		pthread_mutex_lock(&(p->eat_mutex));
+		if (p->phi[i].times_eaten >= p->number_of_times_each_philosopher_must_eat)
+			max_meals++;
+		i++;
+		pthread_mutex_unlock(&(p->eat_mutex));
+	}
+	if (max_meals == p->number_of_philosophers)
+	{
+		activate_end_condition(p);
+		return (0);
+	}
+	return (1);
+}
+
+void	activate_end_condition(t_philo *p)
+{
+	int	i;
+
+	i = 0;
+	while (i < p->number_of_philosophers)
+	{
+		pthread_mutex_lock(&(p->end_condition_mutex));
+		p->phi[i].end_condition = true;
+		i++;
+		pthread_mutex_unlock(&(p->end_condition_mutex));
+	}
 }

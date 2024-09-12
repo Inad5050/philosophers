@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dani <dani@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: dangonz3 <dangonz3@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/01 09:00:38 by dani              #+#    #+#             */
-/*   Updated: 2024/09/12 04:05:59 by dani             ###   ########.fr       */
+/*   Updated: 2024/09/12 15:05:06 by dangonz3         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,16 +26,15 @@ int	parsing(t_philo	*p, int argc, char **argv)
 	if (pthread_mutex_init(&(p->write_mutex), NULL))
 		return (ph_error("Cannot initiate write_mutex\n", p), 0);
 	p->write_mutex_initialized = true;
+	if (pthread_mutex_init(&(p->eat_mutex), NULL))
+		return (ph_error("Cannot initiate write_mutex\n", p), 0);
+	p->eat_mutex_initialized = true;
 	if (pthread_mutex_init(&(p->end_condition_mutex), NULL))
 		return (ph_error("Cannot initiate write_mutex\n", p), 0);
 	p->end_condition_mutex_initialized = true;
-	if (pthread_mutex_init(&(p->join_mutex), NULL))
-		return (ph_error("Cannot initiate write_mutex\n", p), 0);
-	p->join_mutex_initialized = true;
 	return (1);
 }
 
-//check if args are positive numbers
 int	check_args(t_philo	*p, char **argv)
 {
 	int	i;
@@ -58,7 +57,6 @@ int	check_args(t_philo	*p, char **argv)
 	return (1);
 }
 
-//fill struct philo
 int	initiate_args(t_philo *p, int argc, char **argv)
 {
 	p->number_of_philosophers = ft_atoi(argv[1]);
@@ -74,7 +72,6 @@ int	initiate_args(t_philo *p, int argc, char **argv)
 	return (1);
 }
 
-//fill struct phi
 int	initiate_struct_phi(t_philo	*p)
 {
 	int	i;
@@ -87,15 +84,10 @@ int	initiate_struct_phi(t_philo	*p)
 	{
 		p->phi[i].index = i;
 		p->phi[i].philo = p;
-		if (pthread_mutex_init(&(p->phi[i].checker_mutex), NULL))
-			return (ph_error("Cannot initiate meal_mutex\n", p), 0);
-		p->phi[i].checker_mutex_initialized = true;
-		i++;
 	}
 	return (1);
 }
 
-//start fork_mutexs
 int	initiate_forks(t_philo	*p)
 {
 	int	i;
