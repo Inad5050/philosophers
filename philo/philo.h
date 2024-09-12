@@ -6,7 +6,7 @@
 /*   By: dangonz3 <dangonz3@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/30 19:03:59 by dani              #+#    #+#             */
-/*   Updated: 2024/09/12 15:31:17 by dangonz3         ###   ########.fr       */
+/*   Updated: 2024/09/12 17:30:28 by dangonz3         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,6 @@ struct s_philo
 	bool			eat_mutex_initialized;
 	pthread_mutex_t	end_condition_mutex;
 	bool			end_condition_mutex_initialized;
-	int				max_meals;	
 };
 
 //auxiliars

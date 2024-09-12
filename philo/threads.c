@@ -6,7 +6,7 @@
 /*   By: dangonz3 <dangonz3@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 14:49:10 by dangonz3          #+#    #+#             */
-/*   Updated: 2024/09/12 17:07:09 by dangonz3         ###   ########.fr       */
+/*   Updated: 2024/09/12 18:19:27 by dangonz3         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ void	start_threads(t_philo *p)
 	while (++i < p->number_of_philosophers)
 	{
 		if (pthread_join(p->phi[i].th, NULL))
-			ph_error("Failed to join thread", p);		
+			ph_error("Failed to join thread", p);
 	}
 }
 
@@ -64,7 +64,7 @@ void	philo_eat(t_phisolopher *phi)
 
 	p = phi->philo;
 	forks(phi, LOCK);
-	ph_print("is eating", phi->index, phi->philo);	
+	ph_print("is eating", phi->index, phi->philo);
 	phi->eating = true;
 	pthread_mutex_lock(&(p->eat_mutex));
 	phi->last_meal = get_time(phi->philo);
@@ -102,7 +102,7 @@ void	forks(t_phisolopher *phi, int i)
 int	check_end_condition(t_phisolopher *phi)
 {
 	t_philo	*p;
-	
+
 	p = phi->philo;
 	pthread_mutex_lock(&(p->end_condition_mutex));
 	if (phi->end_condition == true)

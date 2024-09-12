@@ -6,7 +6,7 @@
 /*   By: dangonz3 <dangonz3@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 14:52:23 by dangonz3          #+#    #+#             */
-/*   Updated: 2024/09/12 17:06:43 by dangonz3         ###   ########.fr       */
+/*   Updated: 2024/09/12 18:19:39 by dangonz3         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,13 @@ void	*checker_routine(void *p_struct)
 	ph_usleep(2, p);
 	while (1)
 	{
-		if (!check_death(p) || !check_max_meals(p))
+		if (!check_death(p))
 			break ;
+		if (p->number_of_times_each_philosopher_must_eat)
+		{
+			if (!check_max_meals(p))
+				break ;
+		}
 	}
 	return (p_struct);
 }
@@ -33,8 +38,8 @@ int	check_death(t_philo *p)
 	i = 0;
 	while (i < p->number_of_philosophers)
 	{
-		pthread_mutex_lock(&(p->eat_mutex));				
-		if (get_time(p) - p->phi[i].last_meal >= p->time_to_die \
+		pthread_mutex_lock(&(p->eat_mutex));
+		if ((get_time(p) - p->phi[i].last_meal) >= p->time_to_die \
 		&& p->phi[i].eating == false)
 		{
 			activate_end_condition(p);
@@ -51,16 +56,15 @@ int	check_death(t_philo *p)
 int	check_max_meals(t_philo *p)
 {
 	int	i;
-    int max_meals;
-    
+	int	max_meals;
+
 	i = 0;
 	max_meals = 0;
-	if (!p->number_of_times_each_philosopher_must_eat)
-		return (1);
 	while (i < p->number_of_philosophers)
 	{
 		pthread_mutex_lock(&(p->eat_mutex));
-		if (p->phi[i].times_eaten >= p->number_of_times_each_philosopher_must_eat)
+		if (p->phi[i].times_eaten >= \
+		p->number_of_times_each_philosopher_must_eat)
 			max_meals++;
 		i++;
 		pthread_mutex_unlock(&(p->eat_mutex));
