@@ -6,7 +6,7 @@
 /*   By: dangonz3 <dangonz3@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 18:22:40 by dangonz3          #+#    #+#             */
-/*   Updated: 2024/09/12 20:41:29 by dangonz3         ###   ########.fr       */
+/*   Updated: 2024/09/12 21:19:40 by dangonz3         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,8 +27,9 @@ void	one_philo(t_philo *p)
 			ph_error("Failed to create thread", p);
 		sem_wait(p->forks_sem);
 		ph_print("has taken a fork", &(p->phi[0]));
-		while (p->death == false)
-			ph_usleep(0, p);
+		sem_post(p->forks_sem);
+		while (check_end_condition(&(p->phi[0])))
+			ph_usleep(1, p);
 		if (pthread_join(p->phi[0].th_checker, NULL))
 			ph_error("Failed to join thread", p);
 		exit(0);

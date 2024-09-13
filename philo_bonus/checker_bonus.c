@@ -6,7 +6,7 @@
 /*   By: dangonz3 <dangonz3@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 14:11:29 by dani              #+#    #+#             */
-/*   Updated: 2024/09/12 20:47:22 by dangonz3         ###   ########.fr       */
+/*   Updated: 2024/09/13 17:03:09 by dangonz3         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ int	check_end_condition(t_phisolopher *phi)
 	if (phi->end_condition == true)
 	{
 		sem_post(phi->end_sem);
-		return (0);		
+		return (0);
 	}
 	sem_post(phi->end_sem);
 	return (1);

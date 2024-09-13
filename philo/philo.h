@@ -6,7 +6,7 @@
 /*   By: dangonz3 <dangonz3@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/30 19:03:59 by dani              #+#    #+#             */
-/*   Updated: 2024/09/12 20:24:34 by dangonz3         ###   ########.fr       */
+/*   Updated: 2024/09/13 16:06:33 by dangonz3         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,8 @@ void	ph_error(char *str, t_philo *p);
 void	free_memory(t_philo *p);
 
 //others
-void	*one_philo(void *philosopher_struct);
+void	one_philo(t_philo *p);
+void	*one_philo_routine(void *phi_struct);
 void	*ft_calloc(size_t count, size_t size);
 int		ft_atoi(const char *str);
 int		ft_strncmp(const char *str1, const char *str2, size_t n);

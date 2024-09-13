@@ -6,7 +6,7 @@
 /*   By: dangonz3 <dangonz3@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 14:49:10 by dangonz3          #+#    #+#             */
-/*   Updated: 2024/09/12 20:32:50 by dangonz3         ###   ########.fr       */
+/*   Updated: 2024/09/13 16:28:55 by dangonz3         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,14 +16,13 @@ void	start_threads(t_philo *p)
 {
 	int	i;
 
-	if (pthread_create(&(p->checker_th), NULL, &checker_routine, p) != 0)
-		ph_error("Failed to create watcher thread", p);
 	if (p->number_of_philosophers == 1)
 	{
-		if (pthread_create(&(p->phi[0].th), NULL, &one_philo, &(p->phi[0])))
-			ph_error("Failed to create thread", p);
+		one_philo(p);
 		return ;
 	}
+	if (pthread_create(&(p->checker_th), NULL, &checker_routine, p) != 0)
+		ph_error("Failed to create watcher thread", p);
 	i = -1;
 	while (++i < p->number_of_philosophers)
 	{
