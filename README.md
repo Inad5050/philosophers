@@ -96,6 +96,7 @@ This will start a simulation with 5 philosophers, who will die if they don't eat
 The fifth argument, [meals_to_eat], is optional. If it's provided, the simulation will stop once every philosopher has eaten at least that many times. If it's omitted, the simulation only stops when a philosopher dies.
 
 ```$ ./philo 5 800 200 200 7```
+
 In this case, the simulation will end after each of the 5 philosophers has eaten 7 times.
 
 #### 4. Checking for Data Races with Helgrind
@@ -105,4 +106,5 @@ To ensure the program is free of data races and other synchronization issues, yo
 Run the program with Helgrind using the following command:
 
 ```$ valgrind --tool=helgrind ./philo <args>```
+
 If the output shows no errors, your program is likely free of data races.
