@@ -28,7 +28,7 @@ You can find more details in the official project subject.
 
 The project is divided into two parts: a mandatory version using threads and mutexes, and a bonus version using processes and semaphores.
 
-#### Mandatory Part (Threads & Mutexes)
+### Mandatory Part (Threads & Mutexes)
 
 **Threads:** Each philosopher is represented by a separate thread (pthread_create).
 
@@ -40,7 +40,7 @@ The project is divided into two parts: a mandatory version using threads and mut
 
 **Data Race Protection:** All shared data, such as the last meal time or the meal counter, is protected by additional mutexes to prevent data races.
 
-#### Bonus Part (Processes & Semaphores)
+### Bonus Part (Processes & Semaphores)
 
 **Processes:** Each philosopher is a separate process created with fork().
 
@@ -83,9 +83,11 @@ To clean and recompile everything:
 #### 3. How to Run
 
 Run the program with the required arguments:
+
 ```$ ./philo number_of_philosophers time_to_die time_to_eat time_to_sleep [meals_to_eat]```
 
 Example:
-```$ ./philo 5 800 200 200``
+
+```$ ./philo 5 800 200 200```
 
 This will start a simulation with 5 philosophers, who will die if they don't eat within 800ms, and who take 200ms to eat and 200ms to sleep.
