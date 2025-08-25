@@ -91,3 +91,22 @@ Example:
 ```$ ./philo 5 800 200 200```
 
 This will start a simulation with 5 philosophers, who will die if they don't eat within 800ms, and who take 200ms to eat and 200ms to sleep.
+
+**Optional 5th Argument**
+The fifth argument, [meals_to_eat], is optional. If it's provided, the simulation will stop once every philosopher has eaten at least that many times. If it's omitted, the simulation only stops when a philosopher dies.
+
+Example with 5th argument:
+```
+$ ./philo 5 800 200 200 7
+```
+In this case, the simulation will end after each of the 5 philosophers has eaten 7 times.
+
+#### 4. Checking for Data Races with Helgrind
+
+To ensure the program is free of data races and other synchronization issues, you can use Helgrind, a tool from the Valgrind suite.
+
+Run the program with Helgrind using the following command:
+```
+$ valgrind --tool=helgrind ./philo <args>
+```
+If the output shows no errors, your program is likely free of data races.
